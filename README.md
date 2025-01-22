@@ -10,4 +10,4 @@ Command
 
 For BE
 1. git clone https://github.com/BCTP001/be
-2. make be/.env and add your aladin api "ALADIN_API_KEY=ttbts25261620001"
+2. make be/.env and add your aladin api

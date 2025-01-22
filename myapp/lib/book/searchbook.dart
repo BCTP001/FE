@@ -136,27 +136,52 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
                 itemCount: books.length,
                 itemBuilder: (context, index) {
                   final book = books[index];
-                  return ListTile(
-                    title: Text(book['title']),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:[ 
-                        Text(book['author']),
-                        Text(book['categoryName']),
-                      ],
+                  return Card(
+                    margin: const EdgeInsets.all(8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          // Cover image
+                          book['cover'] != null
+                            ? Image.network(
+                                book['cover'],
+                                width: 200,
+                                height: 280,  // Adjusted height to maintain aspect ratio
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.book, size: 200);
+                                },
+                              )
+                            : const Icon(Icons.book, size: 200),
+                          const SizedBox(height: 16),
+                          // Book details
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                book['title'],
+                                style: Theme.of(context).textTheme.titleLarge,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                book['author'],
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                book['categoryName'],
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    leading: book['cover'] != null
-                      ? Image.network( 
-                        book['cover'],
-                        width: 200,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.book);
-                        },
-                      )
-                    : const Icon(Icons.book),
-                  );
+                    );
                 }
               )
             )
