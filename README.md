@@ -8,6 +8,10 @@ Command
 1. flutter run -d web-server --web-hostname=0.0.0.0
 
 
+
 For BE
 1. git clone https://github.com/BCTP001/be
 2. make be/.env and add your aladin api
+
+For navigation bar reference
+https://github.com/eric-taix/fluid-nav-bar
