@@ -28,31 +28,33 @@ class _FluidNavBarDemoState extends State {
     // Build a simple container that switches content based of off the selected navigation item
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Color(0xFF75B7E1),
+        backgroundColor: Color(0xFF7EEDC3),
         extendBody: true,
         body: _child,
         bottomNavigationBar: FluidNavBar(
           icons: [
             FluidNavBarIcon(
                 icon: Icons.home,
-                backgroundColor: Color(0xFF4285F4),
+                backgroundColor: Color(0xFFD0C38F),
                 extras: {"label": "home"}),
             FluidNavBarIcon(
                 icon: Icons.search,
-                backgroundColor: Color(0xFFEC4134),
+                backgroundColor: Color(0xFFD0C38F),
                 extras: {"label": "bookmark"}),
             FluidNavBarIcon(
                 icon: Icons.collections_bookmark,
-                backgroundColor: Color(0xFFFCBA02),
+                backgroundColor: Color(0xFFD0C38F),
                 extras: {"label": "partner"}),
             FluidNavBarIcon(
                 // svgPath: "assets/conference.svg",
                 icon: Icons.settings,
-                backgroundColor: Color(0xFF34A950),
+                backgroundColor: Color(0xFFD0C38F),
                 extras: {"label": "conference"}),
           ],
           onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white),
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white,
+            barBackgroundColor: Color(0xFFE8DCC4),
+            ),
           scaleFactor: 1.5,
           defaultIndex: 1,
           itemBuilder: (icon, item) => Semantics(
@@ -80,7 +82,7 @@ class _FluidNavBarDemoState extends State {
       _child = AnimatedSwitcher(
         switchInCurve: Curves.easeOut,
         switchOutCurve: Curves.easeIn,
-        duration: Duration(milliseconds: 500),
+        duration: Duration(milliseconds: 100),
         child: _child,
       );
     });
