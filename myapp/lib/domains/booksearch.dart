@@ -21,8 +21,18 @@ class _BookSearchContentState extends State<BookSearchContent> {
       isLoading = true;
       isSearchPerformed = true;
     });
-
-    final searchOption = SearchOption(searchQuery: searchQuery);
+    String queryType;
+    switch (selectedSearchType) {
+      case '제목+저자':
+        queryType = "Keyword";
+      case '제목':
+        queryType = "Title";
+      case '저자':
+        queryType = "Author";
+      default:
+        queryType = "Keyword";
+    };
+    final searchOption = SearchOption(searchQuery: searchQuery, queryType: queryType);
     
     final QueryOptions options = QueryOptions(
       document: gql(searchBooksQuery),
@@ -246,13 +256,15 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
 class SearchOption {
   final String? searchQuery;
+  final String? queryType;
 
-  SearchOption({this.searchQuery});
+  SearchOption({this.searchQuery, this.queryType});
 
   Map<String, dynamic> toJson() {
     return {
       'searchQuery': searchQuery,
-      'sort': "Accuracy"
+      'sort': "Accuracy",
+      'queryType': queryType,
     };
   }
 }
