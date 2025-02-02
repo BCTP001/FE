@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../content/bookinfo.dart';
 
 class BookSearchContent extends StatefulWidget {
   const BookSearchContent({super.key});
@@ -184,26 +185,36 @@ class _BookSearchContentState extends State<BookSearchContent> {
                 crossAxisSpacing: 8.0,
               ),
               itemCount: books.length,
-              itemBuilder: (context, index) => _buildBookCard(books[index]),
+              itemBuilder: (context, index) => _buildBookCard(books[index], context),
             ),
     );
   }
 
-  Widget _buildBookCard(dynamic book) {
-    return Card(
-      color: Color(0xFF80471C),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 4,
-            child: _buildBookCover(book['cover']),
+  Widget _buildBookCard(dynamic book, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookDetailsScreen(book: book),
           ),
-          Expanded(
-            flex: 2,
-            child: _buildBookInfo(book),
-          ),
-        ],
+        );
+      },
+      child: Card(
+        color: Color(0xFF80471C),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 4,
+              child: _buildBookCover(book['cover']),
+            ),
+            Expanded(
+              flex: 2,
+              child: _buildBookInfo(book),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -276,6 +287,8 @@ const String searchBooksQuery = """
     author
     cover
     categoryName
+    isbn
+    description
   }
 }
 """;
