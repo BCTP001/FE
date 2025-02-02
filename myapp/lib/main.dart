@@ -19,8 +19,8 @@ class _FluidNavBarDemoState extends State {
 
   @override
   void initState() {
-    _child = HomeContent();
     super.initState();
+    _child = HomeContent();
   }
 
   @override
@@ -52,11 +52,12 @@ class _FluidNavBarDemoState extends State {
                 extras: {"label": "conference"}),
           ],
           onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white,
+          style: FluidNavBarStyle(
+            iconUnselectedForegroundColor: Colors.white,
             barBackgroundColor: Color(0xFFE8DCC4),
-            ),
+          ),
           scaleFactor: 1.5,
-          defaultIndex: 1,
+          defaultIndex: 0,
           itemBuilder: (icon, item) => Semantics(
             label: icon.extras!["label"],
             child: item,
