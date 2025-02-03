@@ -1,43 +1,105 @@
+import 'fluid_nav_bar_icon.dart';
+import 'fluid_nav_bar_style.dart';
 import 'package:flutter/material.dart';
 
-import './fluid_icon.dart';
-import './fluid_button.dart';
-import './curves.dart';
+import 'curves.dart';
+import 'fluid_nav_bar_item.dart';
 
 typedef void FluidNavBarChangeCallback(int selectedIndex);
 
+typedef Widget FluidNavBarItemBuilder(FluidNavBarIcon icon, FluidNavBarItem item);
+
+/// A widget to display a fluid navigation bar with icon buttons.
+///
+///
+/// # Basic usage
+///
+/// {@tool sample}
+/// ```dart
+/// FluidNavBar(
+///   icons: [
+///     FluidNavBarIcon(iconPath: "assets/home.svg"),
+///     FluidNavBarIcon(iconPath: "assets/favorites.svg"),
+///   ]
+/// )
+/// ```
+/// {@end-tool}
+///
+///
 class FluidNavBar extends StatefulWidget {
   static const double nominalHeight = 56.0;
 
+  /// The list of icons to display
+  final List<FluidNavBarIcon> icons;
+
+  /// A callback called when an icon has been tapped with its index
   final FluidNavBarChangeCallback? onChange;
 
-  FluidNavBar({required this.onChange});
+  /// The style to use to paint the fluid navigation bar and its icons
+  final FluidNavBarStyle? style;
+
+  /// Delay to adjust the overall delay of the animations
+  ///   * < 1 is faster
+  ///   * = 1 default velocity
+  ///   * > 1 is slower
+  final double animationFactor;
+
+  /// The scale factor used when an icon is tapped
+  /// 1.0 means that the icon is not scaled and 1.5 means the icons is scaled to +50%
+  /// An optional builder to change or wrap the builded item
+  ///
+  /// This is where you can wrap the item with semantic or
+  /// other widget
+  final double scaleFactor;
+
+  /// Default Index is used for setting up selected item on start of the application.
+  /// By default set to 0, meaning that item with index 0 will be selected.
+  final int defaultIndex;
+
+  final FluidNavBarItemBuilder itemBuilder;
+
+  FluidNavBar(
+      {Key? key,
+      required this.icons,
+      this.onChange,
+      this.style,
+      this.animationFactor = 1.0,
+      this.scaleFactor = 1.2,
+      this.defaultIndex = 0,
+      FluidNavBarItemBuilder? itemBuilder})
+      : this.itemBuilder = itemBuilder ?? _identityBuilder,
+        assert(icons.length > 1),
+        super(key: key);
 
   @override
   State createState() => _FluidNavBarState();
+
+  static Widget _identityBuilder(FluidNavBarIcon icon, FluidNavBarItem item) => item;
 }
 
 class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin {
-  int _selectedIndex = 0;
+  int _currentIndex = 0;
 
-  late AnimationController _xController;
-  late AnimationController _yController;
+  late final AnimationController _xController;
+  late final AnimationController _yController;
 
   @override
   void initState() {
+    super.initState();
+
+    _currentIndex = widget.defaultIndex;
+
     _xController = AnimationController(vsync: this, animationBehavior: AnimationBehavior.preserve);
     _yController = AnimationController(vsync: this, animationBehavior: AnimationBehavior.preserve);
 
     Listenable.merge([_xController, _yController]).addListener(() {
       setState(() {});
     });
-
-    super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    _xController.value = _indexToPosition(_selectedIndex) / MediaQuery.of(context).size.width;
+    _xController.value = _indexToPosition(_currentIndex) / MediaQuery.of(context).size.width;
     _yController.value = 1.0;
 
     super.didChangeDependencies();
@@ -52,10 +114,9 @@ class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin
 
   @override
   Widget build(context) {
-    // The fluid nav bar consists of two components, the liquid background pane and the buttons
-    // Build a stack with the buttons overlayed on top of the background pane
     final appSize = MediaQuery.of(context).size;
-    final height = FluidNavBar.nominalHeight;
+    const height = FluidNavBar.nominalHeight;
+
     return Container(
       width: appSize.width,
       height: FluidNavBar.nominalHeight,
@@ -73,10 +134,7 @@ class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin
             top: 0,
             width: _getButtonContainerWidth(),
             height: height,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: _buildButtons(),
-            ),
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: _buildButtons()),
           ),
         ],
       ),
@@ -84,31 +142,42 @@ class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin
   }
 
   Widget _buildBackground() {
-    // This widget acts purely as a container that controlls how the `_BackgroundCurvePainter` draws
-    final inCurve = ElasticOutCurve(0.38);
     return CustomPaint(
       painter: _BackgroundCurvePainter(
         _xController.value * MediaQuery.of(context).size.width,
         Tween<double>(
           begin: Curves.easeInExpo.transform(_yController.value),
-          end: inCurve.transform(_yController.value),
+          end: ElasticOutCurve(0.38).transform(_yController.value),
         ).transform(_yController.velocity.sign * 0.5 + 0.5),
-        Colors.white,
+        widget.style?.barBackgroundColor ?? Colors.white,
       ),
     );
   }
 
-  List<FluidNavBarButton> _buildButtons() {
-    List<FluidFillIconData> icons = [
-      FluidFillIcons.home,
-      FluidFillIcons.user,
-      FluidFillIcons.window,
-    ];
-    var buttons = <FluidNavBarButton>[];
-    for (var i = 0; i < 3; ++i) {
-      buttons.add(FluidNavBarButton(icons[i], _selectedIndex == i, () => _handlePressed(i)));
-    }
-    return buttons;
+  List<Widget> _buildButtons() {
+    return widget.icons
+        .asMap()
+        .entries
+        .map(
+          (entry) => widget.itemBuilder(
+            entry.value,
+            FluidNavBarItem(
+              entry.value.svgPath ?? entry.value.svgPath,
+              entry.value.icon,
+              _currentIndex == entry.key,
+              () => _handleTap(entry.key),
+              entry.value.selectedForegroundColor ?? widget.style?.iconSelectedForegroundColor ?? Colors.black,
+              entry.value.unselectedForegroundColor ?? widget.style?.iconUnselectedForegroundColor ?? Colors.grey,
+              entry.value.backgroundColor ??
+                  widget.style?.iconBackgroundColor ??
+                  widget.style?.barBackgroundColor ??
+                  Colors.white,
+              widget.scaleFactor,
+              widget.animationFactor,
+            ),
+          ),
+        )
+        .toList();
   }
 
   double _getButtonContainerWidth() {
@@ -122,32 +191,34 @@ class _FluidNavBarState extends State<FluidNavBar> with TickerProviderStateMixin
   double _indexToPosition(int index) {
     // Calculate button positions based off of their
     // index (works with `MainAxisAlignment.spaceAround`)
-    const buttonCount = 3.0;
+    var buttonCount = widget.icons.length;
     final appWidth = MediaQuery.of(context).size.width;
     final buttonsWidth = _getButtonContainerWidth();
     final startX = (appWidth - buttonsWidth) / 2;
     return startX + index.toDouble() * buttonsWidth / buttonCount + buttonsWidth / (buttonCount * 2.0);
   }
 
-  void _handlePressed(int index) {
-    if (_selectedIndex == index || _xController.isAnimating) return;
+  void _handleTap(int index) {
+    if (_currentIndex == index || _xController.isAnimating) return;
 
     setState(() {
-      _selectedIndex = index;
+      _currentIndex = index;
     });
 
     _yController.value = 1.0;
     _xController.animateTo(_indexToPosition(index) / MediaQuery.of(context).size.width,
-        duration: Duration(milliseconds: 620));
+        duration: Duration(milliseconds: 620) * widget.animationFactor);
     Future.delayed(
-      Duration(milliseconds: 500),
+      Duration(milliseconds: 500) * widget.animationFactor,
       () {
-        _yController.animateTo(1.0, duration: Duration(milliseconds: 1200));
+        _yController.animateTo(1.0, duration: Duration(milliseconds: 1200) * widget.animationFactor);
       },
     );
-    _yController.animateTo(0.0, duration: Duration(milliseconds: 300));
+    _yController.animateTo(0.0, duration: Duration(milliseconds: 300) * widget.animationFactor);
 
-    widget.onChange?.call(index);
+    if (widget.onChange != null) {
+      widget.onChange!(index);
+    }
   }
 }
 
