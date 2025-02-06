@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 
-class BookDetailsScreen extends StatelessWidget {
+class BookDetailsScreen extends StatefulWidget {
   final dynamic book;
-
+  
   const BookDetailsScreen({Key? key, required this.book}) : super(key: key);
+
+  @override
+  _BookDetailsScreenState createState() => _BookDetailsScreenState();
+}
+
+class _BookDetailsScreenState extends State<BookDetailsScreen> {
+  Map<String, bool> _expandedSections = {
+    "도서정보": false,
+    "목차": false,
+    "책소개": false,
+  };
+  
+  void _toggleSection(String title) {
+    setState(() {
+      _expandedSections[title] = !_expandedSections[title]!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,34 +33,48 @@ class BookDetailsScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: Color(0xFF7EEDC3),
-      body: SingleChildScrollView(  // Added ScrollView
+      body: SingleChildScrollView(  // ScrollView for the entire body
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildBookCover(book['cover']),
+              _buildBookCover(widget.book['cover']),
               const SizedBox(height: 16),
               Text(
-                book['title'] ?? '',
+                widget.book['title'] ?? '',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                book['author'] ?? '',
+                widget.book['author'] ?? '',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: buildCategoryTags(book['categoryName']),
-              ),
+              
+              // 도서정보
+              _buildInfoBox("도서정보", [
+                Text("발행일: ${widget.book['pubDate'] ?? ''}", style: Theme.of(context).textTheme.titleMedium,),
+                Text("${widget.book['itemPage'] ?? ''}쪽"),
+                Text("ISBN: ${widget.book['isbn'] ?? ''}", style: Theme.of(context).textTheme.titleMedium,),
+              ]),
+              
               const SizedBox(height: 16),
-              Text(
-                book['description'] ?? '',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+              // 목차
+              _buildInfoBox( "목차", [
+                // Assuming the 'contents' is a list of chapter names
+                if (widget.book['bookinfo']['toc'] != null) 
+                  Text(widget.book['bookinfo']['toc'].toString())
+                else
+                  Text("No table of contents available."),
+              ]),
+              
               const SizedBox(height: 16),
+              
+              // 책소개
+              _buildInfoBox( "책소개", [
+                Text(widget.book['description'] ?? 'No description available.'),
+              ]),
             ],
           ),
         ),
@@ -51,6 +82,63 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
+  // Function to build a box for different sections
+  Widget _buildInfoBox(String title, List<Widget> contentWidgets) {
+    bool isExpanded = _expandedSections[title] ?? false;
+
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 제목
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ],
+            ),
+          ),
+
+          // 펼쳐질 내용
+          AnimatedCrossFade(
+            firstChild: SizedBox.shrink(), 
+            secondChild: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: contentWidgets,
+              ),
+            ),
+            crossFadeState:
+                isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 300),
+          ),
+
+          // 중앙 아래에 화살표 버튼
+          Center(
+            child: GestureDetector(
+              onTap: () => _toggleSection(title),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Icon(
+                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  size: 30,
+                  color: Colors.grey[700],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildBookCover(String? coverUrl) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -73,34 +161,6 @@ class BookDetailsScreen extends StatelessWidget {
                 : Icon(Icons.book, size: imageWidth),
           );
       },
-    );
-  }
-
-  Widget buildCategoryTags(String categoryString) {
-    // Split the string by '>' and remove any whitespace
-    final categories = categoryString.split('>')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
-
-    return Wrap(
-      spacing: 8, // gap between adjacent chips
-      runSpacing: 8, // gap between lines
-      children: categories.map((category) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Color(0xFF28DF99),
-          borderRadius: BorderRadius.circular(16),
-          // border: Border.all(color: Color(0xFF7EEDC3)),
-        ),
-        child: Text(
-          category,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.white,
-          ),
-        ),
-      )).toList(),
     );
   }
 }

@@ -289,6 +289,11 @@ const String searchBooksQuery = """
     categoryName
     isbn
     description
+    pubDate
+    bookinfo {
+      itemPage
+      toc
+    }
   }
 }
 """;
