@@ -1,72 +1,82 @@
 import 'package:flutter/material.dart';
-import '../placeholder/placeholder_card_tall.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeContent extends StatelessWidget {
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF7EEDC3),
-        title: Text('전투모의지원중대'),
+        title: Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          padding: EdgeInsets.symmetric(horizontal:16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Color(0xFFE8DCC4),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: 
+            Text(
+              '전투모의지원중대',
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            )
+        ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Book Illustration
-              Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 3),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    '📚', // You can use any custom image or icon
-                    style: TextStyle(fontSize: 60),
+      backgroundColor: Color(0xFF7EEDC3),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/images/book.png',
+                    fit: BoxFit.contain,
+                    width: 225,
+                    height: 284,
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              // Korean Text
-              Text(
-                '오늘의 책을 추천해드립니다',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Spacer(),
-              // Footer Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(width: 10),
-                  Text(
-                    '유저들이 읽은 책들을\n찾아보세요!',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
+                  Positioned(
+                    child: Text(
+                      '오늘의 책을 \n 추천해드립니다',
+                      style: GoogleFonts.nanumBrushScript(
+                        fontSize: 40,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              // Down Arrow Icon
-              Icon(
-                Icons.arrow_downward,
-                size: 30,
-                color: Colors.black,
-              ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 32.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '유저들이 읽은 책들을\n찾아보세요!',
+                  style: GoogleFonts.nanumBrushScript(
+                    fontSize: 20,
+                    color: Color(0xFF5F6368),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Icon(
+                  Icons.keyboard_double_arrow_down,
+                  size: 32,
+                  color: Color(0xFF5F6368),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
