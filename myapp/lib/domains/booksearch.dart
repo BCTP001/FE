@@ -73,8 +73,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLandscape = MediaQuery.of(context).size.aspectRatio > 1;
-    var columnCount = isLandscape ? 3 : 2;
+    var columnCount = 3;
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -100,7 +99,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
       title: Text(
         '어떤 책을 찾으시나요?',
         style: GoogleFonts.nanumBrushScript(
-          fontSize: 35,
+          fontSize: 40,
           color: Colors.black,
         ),
         textAlign: TextAlign.center,
@@ -136,7 +135,13 @@ class _BookSearchContentState extends State<BookSearchContent> {
             items: ['제목+저자', '제목', '저자'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: GoogleFonts.jua( 
+                    fontSize: 16,
+                    color: Colors.black
+                ),
+                  ),
               );
             }).toList(),
             onChanged: (String? newValue) {
@@ -157,6 +162,10 @@ class _BookSearchContentState extends State<BookSearchContent> {
     return Expanded(
       child: TextField(
         controller: searchController,
+        style: GoogleFonts.jua( 
+          fontSize: 16,
+          color: Colors.black
+        ),
         decoration: InputDecoration(
           filled: true,
           fillColor: Color(0xFFE8DCC4),
@@ -176,17 +185,41 @@ class _BookSearchContentState extends State<BookSearchContent> {
       child: isLoading
         ? Center(child: CircularProgressIndicator())
         : books.isEmpty
-          ? Center(child: Text('검색 결과가 없습니다.'))
-          : GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columnCount,
-                childAspectRatio: 1.0,
-                mainAxisSpacing: 8.0,
-                crossAxisSpacing: 8.0,
-              ),
-              itemCount: books.length,
-              itemBuilder: (context, index) => _buildBookCard(books[index], context),
-            ),
+          ? Center(
+              child: Text(
+                '검색 결과가 없습니다.',
+                style: GoogleFonts.jua( 
+                    fontSize: 24,
+                    color: Colors.white
+                ),
+              )
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:[ 
+                Text(
+                  '검색결과',
+                  style: GoogleFonts.jua( 
+                    fontSize: 24,
+                    color: Colors.white
+                  ),
+                ),
+                SizedBox(height: 8),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: columnCount,
+                        mainAxisSpacing: 8.0,
+                        crossAxisSpacing: 8.0,
+                        childAspectRatio: 0.7,
+                      ),
+                      shrinkWrap: true,
+                      itemCount: books.length,
+                      itemBuilder: (context, index) => _buildBookCard(books[index], context),
+                  ),
+                )
+              ]
+            )
     );
   }
 
@@ -202,18 +235,22 @@ class _BookSearchContentState extends State<BookSearchContent> {
       },
       child: Card(
         color: Color(0xFF80471C),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 4,
-              child: _buildBookCover(book['cover']),
-            ),
-            Expanded(
-              flex: 2,
-              child: _buildBookInfo(book),
-            ),
-          ],
+        margin: EdgeInsets.zero,
+        child: LayoutBuilder(
+          builder: (context, constraints) =>  
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: constraints.maxHeight * 0.6,  // 60% of available height
+                  child: _buildBookCover(book['cover']),
+                ),
+                SizedBox(
+                  height: constraints.maxHeight * 0.4,  // 40% of available height
+                  child: _buildBookInfo(book),
+                ),
+              ],
+            )
         ),
       ),
     );
@@ -225,14 +262,14 @@ class _BookSearchContentState extends State<BookSearchContent> {
       child: coverUrl != null
         ? Image.network(
             coverUrl,
-            width: 200,
-            height: 280,
+            width: 100,
+            height: 150,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
-              return const Icon(Icons.book, size: 200);
+              return const Icon(Icons.book, size: 100);
             },
           )
-        : const Icon(Icons.book, size: 200)
+        : const Icon(Icons.book, size: 100)
     );
   }
 
@@ -243,7 +280,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         Text(
           book['title'],
           style: GoogleFonts.jua( 
-            fontSize: Theme.of(context).textTheme.titleSmall?.fontSize,
+            fontSize: 14,
             color: Colors.white
           ),
           maxLines: 2,
@@ -252,10 +289,10 @@ class _BookSearchContentState extends State<BookSearchContent> {
         Text(
           book['categoryName'],
           style: GoogleFonts.jua( 
-            fontSize: Theme.of(context).textTheme.titleSmall?.fontSize,
+            fontSize: 13,
             color: Color(0xFF7EEDC3),
           ),
-          maxLines: 2,
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
       ],
