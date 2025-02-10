@@ -16,6 +16,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
   bool isSearchPerformed = false;
   String selectedSearchType = '제목+저자';
   TextEditingController searchController = TextEditingController();
+  Set<String> bookmarkedBooks = {};
 
   Future<void> searchBooks(String searchQuery) async {
     setState(() {
@@ -73,7 +74,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
   @override
   Widget build(BuildContext context) {
-    var columnCount = 3;
+    var columnCount = 2;
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -205,25 +206,24 @@ class _BookSearchContentState extends State<BookSearchContent> {
                   ),
                 ),
                 SizedBox(height: 8),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: columnCount,
-                        mainAxisSpacing: 8.0,
-                        crossAxisSpacing: 8.0,
-                        childAspectRatio: 0.7,
-                      ),
-                      shrinkWrap: true,
-                      itemCount: books.length,
-                      itemBuilder: (context, index) => _buildBookCard(books[index], context),
+                Expanded(  // Add this Expanded widget
+                  child: ListView.builder(
+                    itemCount: books.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => 
+                      _buildBookCard(books[index], context),
+                    padding: EdgeInsets.zero,
                   ),
-                )
+                ),
               ]
             )
     );
   }
 
   Widget _buildBookCard(dynamic book, BuildContext context) {
+    String bookId = book['isbn'];
+    bool isBookmarked = bookmarkedBooks.contains(bookId);
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -235,22 +235,53 @@ class _BookSearchContentState extends State<BookSearchContent> {
       },
       child: Card(
         color: Color(0xFF80471C),
-        margin: EdgeInsets.zero,
-        child: LayoutBuilder(
-          builder: (context, constraints) =>  
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: constraints.maxHeight * 0.6,  // 60% of available height
-                  child: _buildBookCover(book['cover']),
+        margin: EdgeInsets.symmetric(vertical: 4),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius:  BorderRadius.zero,
+        ),
+        child: Container(
+          height: 180,    // Fixed height for the card
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,     // Changed to Row for horizontal layout
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: _buildBookCover(book['cover']),
+              ),
+              SizedBox(
+                width: 8
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: _buildBookInfo(book),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: constraints.maxHeight * 0.4,  // 40% of available height
-                  child: _buildBookInfo(book),
+              ),
+              IconButton(
+                icon: Icon(
+                  isBookmarked ? Icons.bookmark_added : Icons.bookmark_add,
+                  size: 40,
+                  color: isBookmarked ? Colors.black : Colors.white,
                 ),
-              ],
-            )
+                onPressed: () {
+                  setState(() {
+                    if (isBookmarked)
+                      bookmarkedBooks.remove(bookId);
+                    else 
+                      bookmarkedBooks.add(bookId);
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -283,7 +314,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
             fontSize: 14,
             color: Colors.white
           ),
-          maxLines: 2,
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
         Text(
