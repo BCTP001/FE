@@ -229,7 +229,11 @@ class _BookSearchContentState extends State<BookSearchContent> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BookDetailsScreen(book: book),
+            builder: (context) => BookDetailsScreen(
+              book: book,
+              isInitiallyBookmarked: isBookmarked,
+              onBookmarkToggle: _toggleBookmark,
+            ),
           ),
         );
       },
@@ -328,6 +332,15 @@ class _BookSearchContentState extends State<BookSearchContent> {
         ),
       ],
     );
+  }
+  void _toggleBookmark(String bookId) {
+    setState(() {
+      if (bookmarkedBooks.contains(bookId)) {
+        bookmarkedBooks.remove(bookId);
+      } else {
+        bookmarkedBooks.add(bookId);
+      }
+    });
   }
 }
 

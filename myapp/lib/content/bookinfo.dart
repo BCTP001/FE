@@ -3,8 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 class BookDetailsScreen extends StatefulWidget {
   final dynamic book;
-  
-  const BookDetailsScreen({Key? key, required this.book}) : super(key: key);
+  final bool isInitiallyBookmarked;
+  final Function(String) onBookmarkToggle;
+
+  const BookDetailsScreen({
+    Key? key, 
+    required this.book, 
+    this.isInitiallyBookmarked = false,
+    required this.onBookmarkToggle,
+  }) : super(key: key);
+
 
   @override
   _BookDetailsScreenState createState() => _BookDetailsScreenState();
@@ -16,7 +24,12 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
     "목차": false,
     "책소개": false,
   };
-  bool isBookmarked = false;
+  late bool isBookmarked;
+  @override
+  void initState() {
+    super.initState();
+    isBookmarked = widget.isInitiallyBookmarked;
+  }
 
   void _toggleSection(String title) {
     setState(() {
@@ -69,6 +82,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                       color: isBookmarked ? Colors.black : Colors.white,
                     ),
                     onPressed: () {
+                      widget.onBookmarkToggle(widget.book['isbn']);
                       setState(() {
                         isBookmarked = !isBookmarked;
                       });
