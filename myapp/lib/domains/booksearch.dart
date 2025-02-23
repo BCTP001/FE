@@ -362,7 +362,7 @@ class SearchOption {
 }
 
 const String searchBooksQuery = """
-  query ExampleQuery(\$searchOption: SearchOption) {
+  query ExampleQuery(\$searchOption: SearchOption!) {
   searchBooksAndGetBookInfo(searchOption: \$searchOption) {
     title
     author

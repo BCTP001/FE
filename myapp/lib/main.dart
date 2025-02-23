@@ -5,16 +5,16 @@ import 'content/home.dart';
 import 'content/search.dart';
 import 'content/collection.dart';
 
-void main() => runApp(FluidNavBarDemo());
+void main() => runApp(Myapp());
 
-class FluidNavBarDemo extends StatefulWidget {
+class Myapp extends StatefulWidget {
   @override
   State createState() {
-    return _FluidNavBarDemoState();
+    return _Myapp();
   }
 }
 
-class _FluidNavBarDemoState extends State {
+class _Myapp extends State {
   Widget? _child;
 
   @override
