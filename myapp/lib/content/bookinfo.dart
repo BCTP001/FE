@@ -7,12 +7,11 @@ class BookDetailsScreen extends StatefulWidget {
   final Function(String) onBookmarkToggle;
 
   const BookDetailsScreen({
-    Key? key, 
-    required this.book, 
+    Key? key,
+    required this.book,
     this.isInitiallyBookmarked = false,
     required this.onBookmarkToggle,
   }) : super(key: key);
-
 
   @override
   _BookDetailsScreenState createState() => _BookDetailsScreenState();
@@ -38,9 +37,10 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
   }
 
   String cleanText(String text) {
-    return text.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
-               .replaceAll(RegExp(r'<[^>]*>'), '')
-               .trim();
+    return text
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .trim();
   }
 
   @override
@@ -54,7 +54,8 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
         ),
       ),
       backgroundColor: Color(0xFF7EEDC3),
-      body: SingleChildScrollView(  // ScrollView for the entire body
+      body: SingleChildScrollView(
+        // ScrollView for the entire body
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -65,7 +66,8 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
               const SizedBox(height: 16),
               // 제목
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes items to the edges
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween, // Pushes items to the edges
                 children: [
                   Text(
                     widget.book['title'] ?? '',
@@ -136,11 +138,10 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                     color: Colors.black,
                   ),
                 ),
-                ]
-              ),
+              ]),
               const SizedBox(height: 16),
               // 책소개
-              _buildInfoBox( "책소개", [
+              _buildInfoBox("책소개", [
                 if (widget.book['description'] != "")
                   Text(
                     widget.book['description'],
@@ -157,15 +158,14 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                       color: Colors.black,
                     ),
                   )
-                ]
-              ),
+              ]),
               const SizedBox(height: 16),
               // 목차
-              _buildInfoBox( "목차", [
+              _buildInfoBox("목차", [
                 // Assuming the 'contents' is a list of chapter names
                 if (widget.book['bookinfo']['toc'] != "")
                   Text(
-                    cleanText(widget.book['bookinfo']['toc']) ,
+                    cleanText(widget.book['bookinfo']['toc']),
                     style: GoogleFonts.jua(
                       fontSize: 16,
                       color: Colors.black,
@@ -179,8 +179,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                       color: Colors.black,
                     ),
                   )
-                ]
-              ),
+              ]),
               const SizedBox(height: 40),
             ],
           ),
@@ -221,8 +220,8 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
           // 펼쳐질 내용
           AnimatedCrossFade(
             // firstChild: SizedBox.shrink(),
-            firstChild:  Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            firstChild: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: SizedBox(
                 height: 60, // Fixed height instead of a ratio
                 child: Text(
@@ -243,8 +242,9 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                 children: contentWidgets,
               ),
             ),
-            crossFadeState:
-                isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            crossFadeState: isExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
             duration: Duration(milliseconds: 100),
           ),
 
@@ -255,7 +255,9 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Icon(
-                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  isExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
                   size: 30,
                   color: Colors.grey[700],
                 ),
@@ -266,30 +268,32 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
       ),
     );
   }
+
   Widget _buildBookCover(String? coverUrl) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Center(
           child: coverUrl != null
-                ? Image.network(
-                    coverUrl,
-                    width: 250,
-                    height: 355,
-                    fit: BoxFit.contain,
-                    alignment: Alignment.center,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.book, size: 250);
-                    },
-                  )
-                : Icon(Icons.book, size: 250),
-          );
+              ? Image.network(
+                  coverUrl,
+                  width: 250,
+                  height: 355,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.book, size: 250);
+                  },
+                )
+              : Icon(Icons.book, size: 250),
+        );
       },
     );
   }
 
   Widget buildCategoryTags(String categoryString) {
     // Split the string by '>' and remove any whitespace
-    final categories = categoryString.split('>')
+    final categories = categoryString
+        .split('>')
         .map((e) => e.trim())
         .where((e) => e.isNotEmpty)
         .toList();
@@ -297,21 +301,23 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
     return Wrap(
       spacing: 8, // gap between adjacent chips
       runSpacing: 8, // gap between lines
-      children: categories.map((category) => Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF28DF99),
-          borderRadius: BorderRadius.circular(16),
-          // border: Border.all(color: Color(0xFF7EEDC3)),
-        ),
-        child: Text(
-          '#'+category,
-          style: GoogleFonts.jua(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      )).toList(),
+      children: categories
+          .map((category) => Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFF28DF99),
+                  borderRadius: BorderRadius.circular(16),
+                  // border: Border.all(color: Color(0xFF7EEDC3)),
+                ),
+                child: Text(
+                  '#' + category,
+                  style: GoogleFonts.jua(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ))
+          .toList(),
     );
   }
 }

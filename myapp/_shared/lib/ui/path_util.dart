@@ -26,4 +26,3 @@ ui.Path extractPartialPath(ui.Path path, double start, double end) {
 
   return result;
 }
-

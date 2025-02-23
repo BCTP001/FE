@@ -33,27 +33,30 @@ class _BookSearchContentState extends State<BookSearchContent> {
         queryType = "Author";
       default:
         queryType = "Keyword";
-    };
-    final searchOption = SearchOption(searchQuery: searchQuery, queryType: queryType);
-    
+    }
+    ;
+    final searchOption =
+        SearchOption(searchQuery: searchQuery, queryType: queryType);
+
     final QueryOptions options = QueryOptions(
       document: gql(searchBooksQuery),
       variables: {
         'searchOption': searchOption.toJson(),
       },
     );
-    
+
     try {
-      final QueryResult result = await GraphQLProvider.of(context).value.query(options);
+      final QueryResult result =
+          await GraphQLProvider.of(context).value.query(options);
       if (result.hasException) {
         print('GraphQL Error: ${result.exception.toString()}');
-        setState((){
+        setState(() {
           books = [];
           isLoading = false;
         });
         return;
       }
-      
+
       setState(() {
         books = result.data?['searchBooksAndGetBookInfo'] ?? [];
         isLoading = false;
@@ -66,6 +69,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
       });
     }
   }
+
   @override
   void dispose() {
     searchController.dispose();
@@ -118,7 +122,6 @@ class _BookSearchContentState extends State<BookSearchContent> {
     );
   }
 
-
   Widget _buildSearchTypeDropdown() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
@@ -138,11 +141,8 @@ class _BookSearchContentState extends State<BookSearchContent> {
                 value: value,
                 child: Text(
                   value,
-                  style: GoogleFonts.jua( 
-                    fontSize: 16,
-                    color: Colors.black
+                  style: GoogleFonts.jua(fontSize: 16, color: Colors.black),
                 ),
-                  ),
               );
             }).toList(),
             onChanged: (String? newValue) {
@@ -163,10 +163,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
     return Expanded(
       child: TextField(
         controller: searchController,
-        style: GoogleFonts.jua( 
-          fontSize: 16,
-          color: Colors.black
-        ),
+        style: GoogleFonts.jua(fontSize: 16, color: Colors.black),
         decoration: InputDecoration(
           filled: true,
           fillColor: Color(0xFFE8DCC4),
@@ -183,41 +180,34 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
   Widget _buildBookGrid(int columnCount) {
     return Expanded(
-      child: isLoading
-        ? Center(child: CircularProgressIndicator())
-        : books.isEmpty
-          ? Center(
-              child: Text(
-                '검색 결과가 없습니다.',
-                style: GoogleFonts.jua( 
-                    fontSize: 24,
-                    color: Colors.white
-                ),
-              )
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:[ 
-                Text(
-                  '검색결과',
-                  style: GoogleFonts.jua( 
-                    fontSize: 24,
-                    color: Colors.white
-                  ),
-                ),
-                SizedBox(height: 8),
-                Expanded(  // Add this Expanded widget
-                  child: ListView.builder(
-                    itemCount: books.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => 
-                      _buildBookCard(books[index], context),
-                    padding: EdgeInsets.zero,
-                  ),
-                ),
-              ]
-            )
-    );
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : books.isEmpty
+                ? Center(
+                    child: Text(
+                    '검색 결과가 없습니다.',
+                    style: GoogleFonts.jua(fontSize: 24, color: Colors.white),
+                  ))
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Text(
+                          '검색결과',
+                          style: GoogleFonts.jua(
+                              fontSize: 24, color: Colors.white),
+                        ),
+                        SizedBox(height: 8),
+                        Expanded(
+                          // Add this Expanded widget
+                          child: ListView.builder(
+                            itemCount: books.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) =>
+                                _buildBookCard(books[index], context),
+                            padding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ]));
   }
 
   Widget _buildBookCard(dynamic book, BuildContext context) {
@@ -242,21 +232,20 @@ class _BookSearchContentState extends State<BookSearchContent> {
         margin: EdgeInsets.symmetric(vertical: 4),
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius:  BorderRadius.zero,
+          borderRadius: BorderRadius.zero,
         ),
         child: Container(
-          height: 180,    // Fixed height for the card
+          height: 180, // Fixed height for the card
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,     // Changed to Row for horizontal layout
+            mainAxisAlignment: MainAxisAlignment
+                .spaceBetween, // Changed to Row for horizontal layout
             children: [
               Padding(
                 padding: EdgeInsets.all(8),
                 child: _buildBookCover(book['cover']),
               ),
-              SizedBox(
-                width: 8
-              ),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -279,7 +268,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
                   setState(() {
                     if (isBookmarked)
                       bookmarkedBooks.remove(bookId);
-                    else 
+                    else
                       bookmarkedBooks.add(bookId);
                   });
                 },
@@ -293,19 +282,18 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
   Widget _buildBookCover(String? coverUrl) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: coverUrl != null
-        ? Image.network(
-            coverUrl,
-            width: 100,
-            height: 150,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return const Icon(Icons.book, size: 100);
-            },
-          )
-        : const Icon(Icons.book, size: 100)
-    );
+        borderRadius: BorderRadius.circular(8.0),
+        child: coverUrl != null
+            ? Image.network(
+                coverUrl,
+                width: 100,
+                height: 150,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.book, size: 100);
+                },
+              )
+            : const Icon(Icons.book, size: 100));
   }
 
   Widget _buildBookInfo(dynamic book) {
@@ -314,16 +302,13 @@ class _BookSearchContentState extends State<BookSearchContent> {
       children: [
         Text(
           book['title'],
-          style: GoogleFonts.jua( 
-            fontSize: 14,
-            color: Colors.white
-          ),
+          style: GoogleFonts.jua(fontSize: 14, color: Colors.white),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
         Text(
           book['categoryName'],
-          style: GoogleFonts.jua( 
+          style: GoogleFonts.jua(
             fontSize: 13,
             color: Color(0xFF7EEDC3),
           ),
@@ -333,6 +318,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
       ],
     );
   }
+
   void _toggleBookmark(String bookId) {
     setState(() {
       if (bookmarkedBooks.contains(bookId)) {
@@ -343,8 +329,6 @@ class _BookSearchContentState extends State<BookSearchContent> {
     });
   }
 }
-
-
 
 class SearchOption {
   final String? searchQuery;

@@ -37,6 +37,8 @@ class FluidNavBarIcon {
     this.unselectedForegroundColor,
     this.backgroundColor,
     this.extras,
-  })  : assert(iconPath == null || svgPath == null || icon == null, 'Cannot provide both an svgPath and an icon.'),
-        assert(iconPath != null || svgPath != null || icon != null, 'An svgPath or an icon must be provided.');
+  })  : assert(iconPath == null || svgPath == null || icon == null,
+            'Cannot provide both an svgPath and an icon.'),
+        assert(iconPath != null || svgPath != null || icon != null,
+            'An svgPath or an icon must be provided.');
 }

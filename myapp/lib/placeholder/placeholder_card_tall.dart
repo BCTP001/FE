@@ -10,7 +10,12 @@ class PlaceholderCardTall extends StatelessWidget {
   final Color? backgroundColor;
 
   const PlaceholderCardTall(
-      {Key? key, this.cornerRadius = 4, this.color, this.backgroundColor, this.width = 400, this.height})
+      {Key? key,
+      this.cornerRadius = 4,
+      this.color,
+      this.backgroundColor,
+      this.width = 400,
+      this.height})
       : super(key: key);
 
   @override
@@ -30,7 +35,8 @@ class PlaceholderCardTall extends StatelessWidget {
         children: <Widget>[
           //Circle image
           Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(999), color: fgColor),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(999), color: fgColor),
             height: 45,
             width: 45,
           ),
@@ -42,16 +48,28 @@ class PlaceholderCardTall extends StatelessWidget {
               width: 100.0 + r.nextInt(100)),
 
           //Content Line
-          Container(margin: EdgeInsets.only(top: 60, right: 10.0 + r.nextInt(60)), color: fgColor, height: lineHeight),
+          Container(
+              margin: EdgeInsets.only(top: 60, right: 10.0 + r.nextInt(60)),
+              color: fgColor,
+              height: lineHeight),
 
           //Content Line
-          Container(margin: EdgeInsets.only(top: 85, right: 10.0 + r.nextInt(60)), color: fgColor, height: lineHeight),
+          Container(
+              margin: EdgeInsets.only(top: 85, right: 10.0 + r.nextInt(60)),
+              color: fgColor,
+              height: lineHeight),
 
           //Content Line
-          Container(margin: EdgeInsets.only(top: 110, right: 10.0 + r.nextInt(60)), color: fgColor, height: lineHeight),
+          Container(
+              margin: EdgeInsets.only(top: 110, right: 10.0 + r.nextInt(60)),
+              color: fgColor,
+              height: lineHeight),
 
           //Content Line
-          Container(margin: EdgeInsets.only(top: 135, right: 60.0 + r.nextInt(60)), color: fgColor, height: lineHeight),
+          Container(
+              margin: EdgeInsets.only(top: 135, right: 60.0 + r.nextInt(60)),
+              color: fgColor,
+              height: lineHeight),
         ],
       ),
     );

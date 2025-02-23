@@ -27,7 +27,6 @@ class _Myapp extends State {
   Widget build(context) {
     // Build a simple container that switches content based of off the selected navigation item
     return MaterialApp(
-      
       home: Scaffold(
         backgroundColor: Color(0xFF7EEDC3),
         extendBody: true,
