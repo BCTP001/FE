@@ -21,9 +21,9 @@ Color getRandomColorWithBrightness(double minLightness, double maxLightness) {
 class Feedbook {
   final String review, cover, title;
   final int likes, added;
-  final Color color;
+  final Color color = Colors.white;
   const Feedbook(
-      this.review, this.cover, this.title, this.likes, this.added, this.color);
+      this.review, this.cover, this.title, this.likes, this.added, {color});
 }
 
 class FeedView extends StatefulWidget {
@@ -48,8 +48,7 @@ class _FeedViewState extends State<FeedView> {
         "https://image.aladin.co.kr/product/4/6/cover500/s93746005x_3.jpg",
         "동물농장",
         10,
-        8,
-        getRandomColorWithBrightness(0.3, 0.6)),
+        8),
     Feedbook(
         "무섭다",
         "https://image.aladin.co.kr/product/41/89/cover500/s122531356_2.jpg",
@@ -75,7 +74,7 @@ class _FeedViewState extends State<FeedView> {
       itemCount: books.length,
       itemBuilder: (context, index) {
         return Feed(books[index].review, books[index].cover, books[index].title,
-            books[index].likes, books[index].added, books[index].color);
+            books[index].likes, books[index].added, color:books[index].color);
       },
     );
   }
