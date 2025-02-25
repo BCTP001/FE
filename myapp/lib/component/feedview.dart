@@ -67,6 +67,7 @@ class _FeedViewState extends State<FeedView> {
     return PageView.builder(
       scrollDirection: Axis.vertical,
       controller: controller,
+      physics: const ClampingScrollPhysics(),
       onPageChanged: (value) {
         setState(() {
           currentPage = value;

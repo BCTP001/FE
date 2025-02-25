@@ -6,7 +6,7 @@ class SearchContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HttpLink httpLink = HttpLink(
-        "https://scaling-waddle-pwvp6rwx6rxc6j5r-4000.app.github.dev/");
+        "https://ubiquitous-space-orbit-w56g475w9rx2g7v4-4000.app.github.dev/");
 
     ValueNotifier<GraphQLClient> client = ValueNotifier<GraphQLClient>(
       GraphQLClient(
