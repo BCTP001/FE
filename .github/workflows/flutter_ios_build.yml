@@ -1,0 +1,39 @@
+name: Build iOS App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4  # Updated to latest version
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.0'
+          architecture: x64
+
+      - name: Install dependencies
+        run: |
+          cd myapp && flutter pub get
+          cd ios && pod install && cd ..
+
+      - name: Build iOS app
+        run: |
+          cd myapp && flutter build ipa --release --no-codesign
+          cd build && ls ios && cd ios && find . -maxdepth 3 -ls
+      # Update: Use actions/upload-artifact@v4 instead of v3
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4  # Updated version
+        with:
+          name: iOS-build
+          path: myapp/build/ios/**/*.ipa
