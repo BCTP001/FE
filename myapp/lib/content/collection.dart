@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../placeholder/placeholder_card_short.dart';
 
 class CollectionContent extends StatefulWidget {
+  const CollectionContent({super.key});
+
   @override
-  _CollectionContentState createState() => _CollectionContentState();
+  State<CollectionContent> createState() => _CollectionContentState();
 }
 
 class _CollectionContentState extends State<CollectionContent>

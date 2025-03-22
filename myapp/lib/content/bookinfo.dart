@@ -7,18 +7,18 @@ class BookDetailsScreen extends StatefulWidget {
   final Function(String) onBookmarkToggle;
 
   const BookDetailsScreen({
-    Key? key,
+    super.key,
     required this.book,
     this.isInitiallyBookmarked = false,
     required this.onBookmarkToggle,
-  }) : super(key: key);
+  });
 
   @override
-  _BookDetailsScreenState createState() => _BookDetailsScreenState();
+  State<BookDetailsScreen> createState() => _BookDetailsScreenState();
 }
 
 class _BookDetailsScreenState extends State<BookDetailsScreen> {
-  Map<String, bool> _expandedSections = {
+  final Map<String, bool> _expandedSections = {
     "도서정보": true,
     "목차": false,
     "책소개": false,
