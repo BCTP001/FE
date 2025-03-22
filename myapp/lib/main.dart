@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'content/home.dart';
 import 'content/search.dart';
-import 'content/collection.dart';
+import 'content/bookmark.dart';
 
 void main() => runApp(Myapp());
 
@@ -77,8 +77,9 @@ class _Myapp extends State {
           _child = SearchContent();
           break;
         case 2:
-          _child = CollectionContent();
+          _child = BookmarkContent();
           break;
+        
       }
       _child = AnimatedSwitcher(
         switchInCurve: Curves.easeOut,
