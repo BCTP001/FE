@@ -69,12 +69,14 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                 mainAxisAlignment:
                     MainAxisAlignment.spaceBetween, // Pushes items to the edges
                 children: [
-                  Text(
-                    widget.book['title'] ?? '',
-                    style: GoogleFonts.jua(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                  Expanded(
+                    child: Text(
+                      widget.book['title'] ?? '',
+                      style: GoogleFonts.jua(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   IconButton(
