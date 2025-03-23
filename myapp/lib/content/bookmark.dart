@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class BookmarkContent extends StatefulWidget {
   const BookmarkContent({super.key});
@@ -104,5 +105,25 @@ class _BookmarkContentState extends State<BookmarkContent> {
         ),
       );
     });
+  }
+}
+
+class BookmarksProvider extends ChangeNotifier {
+  final Set<String> _bookmarkedBooks = {};
+  
+  Set<String> get bookmarkedBooks => _bookmarkedBooks;
+  
+  void addBookmark(String bookId) {
+    _bookmarkedBooks.add(bookId);
+    notifyListeners();
+  }
+  
+  void removeBookmark(String bookId) {
+    _bookmarkedBooks.remove(bookId);
+    notifyListeners();
+  }
+  
+  bool isBookmarked(String bookId) {
+    return _bookmarkedBooks.contains(bookId);
   }
 }

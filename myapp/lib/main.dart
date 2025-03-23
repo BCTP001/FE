@@ -1,11 +1,17 @@
 import 'fluid-nav-bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'content/home.dart';
 import 'content/search.dart';
 import 'content/bookmark.dart';
 
-void main() => runApp(Myapp());
+void main() => runApp(
+    ChangeNotifierProvider(
+      create: (context) => BookmarksProvider(),
+      child: Myapp(),
+    )
+  );
 
 class Myapp extends StatefulWidget {
   const Myapp({super.key});

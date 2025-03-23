@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
 import '../content/bookinfo.dart';
+import '../content/bookmark.dart';
 
 class BookSearchContent extends StatefulWidget {
   const BookSearchContent({super.key});
@@ -16,7 +19,6 @@ class _BookSearchContentState extends State<BookSearchContent> {
   bool isSearchPerformed = false;
   String selectedSearchType = '제목+저자';
   TextEditingController searchController = TextEditingController();
-  Set<String> bookmarkedBooks = {};
 
   Future<void> searchBooks(String searchQuery) async {
     setState(() {
@@ -212,73 +214,84 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
   Widget _buildBookCard(dynamic book, BuildContext context) {
     String bookId = book['isbn'];
-    bool isBookmarked = bookmarkedBooks.contains(bookId);
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BookDetailsScreen(
-              book: book,
-              isInitiallyBookmarked: isBookmarked,
-              onBookmarkToggle: _toggleBookmark,
+    return Consumer<BookmarksProvider>(
+      builder: (context, bookmarksProvider, child) {
+        bool isBookmarked = bookmarksProvider.isBookmarked(bookId);
+
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BookDetailsScreen(
+                  book: book,
+                  isInitiallyBookmarked: isBookmarked,
+                  onBookmarkToggle: (String id) {
+                    if (bookmarksProvider.isBookmarked(id)) {
+                      bookmarksProvider.removeBookmark(id);
+                    } else {
+                      bookmarksProvider.addBookmark(id);
+                    }
+                  },
+                ),
+              ),
+            );
+          },
+          child: Card(
+            color: Color(0xFF80471C),
+            margin: EdgeInsets.symmetric(vertical: 4),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+            child: Container(
+              height: 180, // Fixed height for the card
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Changed to Row for horizontal layout
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: _buildBookCover(book['cover']),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: _buildBookInfo(book),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      isBookmarked ? Icons.bookmark_added : Icons.bookmark_add,
+                      size: 40,
+                      color: isBookmarked ? Colors.black : Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        if (isBookmarked) {
+                          bookmarksProvider.removeBookmark(bookId);
+                        }
+                        else {
+                          bookmarksProvider.addBookmark(bookId);
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );
-      },
-      child: Card(
-        color: Color(0xFF80471C),
-        margin: EdgeInsets.symmetric(vertical: 4),
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
-        child: Container(
-          height: 180, // Fixed height for the card
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment
-                .spaceBetween, // Changed to Row for horizontal layout
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: _buildBookCover(book['cover']),
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: _buildBookInfo(book),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: Icon(
-                  isBookmarked ? Icons.bookmark_added : Icons.bookmark_add,
-                  size: 40,
-                  color: isBookmarked ? Colors.black : Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    if (isBookmarked) {
-                      bookmarkedBooks.remove(bookId);
-                    }
-                    else {
-                      bookmarkedBooks.add(bookId);
-                    }
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      }
     );
   }
 
@@ -319,16 +332,6 @@ class _BookSearchContentState extends State<BookSearchContent> {
         ),
       ],
     );
-  }
-
-  void _toggleBookmark(String bookId) {
-    setState(() {
-      if (bookmarkedBooks.contains(bookId)) {
-        bookmarkedBooks.remove(bookId);
-      } else {
-        bookmarkedBooks.add(bookId);
-      }
-    });
   }
 }
 
