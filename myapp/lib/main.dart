@@ -8,6 +8,8 @@ import 'content/bookmark.dart';
 void main() => runApp(Myapp());
 
 class Myapp extends StatefulWidget {
+  const Myapp({super.key});
+  
   @override
   State createState() {
     return _Myapp();

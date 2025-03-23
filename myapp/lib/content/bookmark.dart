@@ -10,20 +10,32 @@ class BookmarkContent extends StatefulWidget {
 class _BookmarkContentState extends State<BookmarkContent> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      backgroundColor: Color(0xFF80471C),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSortBar(),
-            SizedBox(height: 20),
-            // _buildBookGrid(columnCount),
-          ],
-        ),
+    final HttpLink httpLink = HttpLink(
+        "https://organic-space-bassoon-r69pxg6jx7xcxppw-4000.app.github.dev/");
+  
+    ValueNotifier<GraphQLClient> client = ValueNotifier<GraphQLClient>(
+      GraphQLClient(
+        link: httpLink,
+        cache: GraphQLCache(),
       ),
+    );
+    return GraphQLProvider(
+      client: client,
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        backgroundColor: Color(0xFF80471C),
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSortBar(),
+              SizedBox(height: 20),
+              // _write_graphql_provider(columnCount),
+            ],
+          ),
+        ),
+      )
     );
   }
 

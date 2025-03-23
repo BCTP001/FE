@@ -34,7 +34,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
       default:
         queryType = "Keyword";
     }
-    ;
+    
     final searchOption =
         SearchOption(searchQuery: searchQuery, queryType: queryType);
 
@@ -49,7 +49,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
       final QueryResult result =
           await GraphQLProvider.of(context).value.query(options);
       if (result.hasException) {
-        print('GraphQL Error: ${result.exception.toString()}');
+        debugPrint('GraphQL Error: ${result.exception.toString()}');
         setState(() {
           books = [];
           isLoading = false;
@@ -62,7 +62,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error searching books: $e');
+      debugPrint('Error searching books: $e');
       setState(() {
         books = [];
         isLoading = false;
@@ -266,10 +266,12 @@ class _BookSearchContentState extends State<BookSearchContent> {
                 ),
                 onPressed: () {
                   setState(() {
-                    if (isBookmarked)
+                    if (isBookmarked) {
                       bookmarkedBooks.remove(bookId);
-                    else
+                    }
+                    else {
                       bookmarkedBooks.add(bookId);
+                    }
                   });
                 },
               ),

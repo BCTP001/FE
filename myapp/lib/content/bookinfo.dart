@@ -311,7 +311,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                   // border: Border.all(color: Color(0xFF7EEDC3)),
                 ),
                 child: Text(
-                  '#' + category,
+                  '#$category',
                   style: GoogleFonts.jua(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
