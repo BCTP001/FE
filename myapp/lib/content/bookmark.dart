@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import '../component/graphql_client.dart';
 
 class BookmarkContent extends StatefulWidget {
   const BookmarkContent({super.key});
@@ -11,15 +12,7 @@ class BookmarkContent extends StatefulWidget {
 class _BookmarkContentState extends State<BookmarkContent> {
   @override
   Widget build(BuildContext context) {
-    final HttpLink httpLink = HttpLink(
-        "https://organic-space-bassoon-r69pxg6jx7xcxppw-4000.app.github.dev/");
-  
-    ValueNotifier<GraphQLClient> client = ValueNotifier<GraphQLClient>(
-      GraphQLClient(
-        link: httpLink,
-        cache: GraphQLCache(),
-      ),
-    );
+    final ValueNotifier<GraphQLClient> client = GraphQLService.getClient();
     return GraphQLProvider(
       client: client,
       child: Scaffold(
