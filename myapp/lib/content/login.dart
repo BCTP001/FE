@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import '../component/graphql_client.dart';
 
 // Auth Provider to manage authentication state
 class AuthProvider extends ChangeNotifier {
@@ -247,6 +249,8 @@ class LoginScreen extends StatelessWidget {
 
 // Registration screens (Setup 1-5)
 class SetupScreen1 extends StatelessWidget {
+  final TextEditingController _loginNameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -287,6 +291,7 @@ class SetupScreen1 extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextField(
+                  controller: _loginNameController,
                   decoration: InputDecoration(
                     hintText: "example",
                     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -299,7 +304,14 @@ class SetupScreen1 extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/setup2');
+                    String enteredLoginName = _loginNameController.text.trim();
+                    Navigator.push(context,
+                      MaterialPageRoute(
+                        builder: (context) => SetupScreen2(
+                          loginName: enteredLoginName,
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFF8E6C8),
@@ -321,6 +333,11 @@ class SetupScreen1 extends StatelessWidget {
 }
 
 class SetupScreen2 extends StatelessWidget {
+  final String loginName;
+  final TextEditingController _passwordController = TextEditingController();
+
+  SetupScreen2({Key? key, required this.loginName}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -361,6 +378,7 @@ class SetupScreen2 extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: "example",
@@ -374,7 +392,15 @@ class SetupScreen2 extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/setup3');
+                    String enteredPassword = _passwordController.text.trim();
+                    Navigator.push(context,
+                      MaterialPageRoute(
+                        builder: (context) => SetupScreen3(
+                          loginName: loginName,
+                          password: enteredPassword,
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFF8E6C8),
@@ -396,6 +422,12 @@ class SetupScreen2 extends StatelessWidget {
 }
 
 class SetupScreen3 extends StatelessWidget {
+  final String loginName;
+  final String password;
+  final TextEditingController _nicknameController = TextEditingController();
+
+  SetupScreen3({Key? key, required this.loginName, required this.password}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -436,6 +468,7 @@ class SetupScreen3 extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextField(
+                  controller: _nicknameController,
                   decoration: InputDecoration(
                     hintText: "활동할 닉네임",
                     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -448,7 +481,16 @@ class SetupScreen3 extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/setup4');
+                    String enteredNickname = _nicknameController.text.trim();
+                    Navigator.push(context,
+                      MaterialPageRoute(
+                        builder: (context) => SetupScreen4(
+                          loginName: loginName,
+                          password: password,
+                          nickname: enteredNickname,
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFF8E6C8),
@@ -470,6 +512,12 @@ class SetupScreen3 extends StatelessWidget {
 }
 
 class SetupScreen4 extends StatelessWidget {
+  final String loginName;
+  final String password;
+  final String nickname;
+
+  const SetupScreen4({Key? key, required this.loginName, required this.password, required this.nickname}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -566,7 +614,15 @@ class SetupScreen4 extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/setup5');
+                    Navigator.push(context,
+                      MaterialPageRoute(
+                        builder: (context) => SetupScreen5(
+                          loginName: loginName,
+                          password: password,
+                          nickname: nickname,
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFF8E6C8),
@@ -587,7 +643,100 @@ class SetupScreen4 extends StatelessWidget {
   }
 }
 
-class SetupScreen5 extends StatelessWidget {
+class SetupScreen5 extends StatefulWidget {
+  final String loginName;    // username from SetupScreen1
+  final String password;     // password from SetupScreen2
+  final String nickname;     // name from SetupScreen3
+
+  const SetupScreen5({
+    Key? key,
+    required this.loginName,
+    required this.password,
+    required this.nickname,
+  }) : super(key: key);
+
+  @override
+  State<SetupScreen5> createState() => _SetupScreen5State();
+}
+
+class _SetupScreen5State extends State<SetupScreen5> {
+  bool _isLoading = false;
+  bool _isSignupComplete = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Automatically trigger signup when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleSignUp();
+    });
+  }
+
+  Future<void> _handleSignUp() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Call the GraphQL signup API with the collected data
+      final result = await GraphQLService.signUp(
+        widget.nickname,    // name parameter
+        widget.loginName,   // username parameter
+        widget.password,    // password parameter
+      );
+
+      if (result != null && result['signUp'] != null) {
+        // Success - handle the response
+        final userData = result['signUp'];
+        
+        if (mounted) {
+          setState(() {
+            _isSignupComplete = true;
+          });
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Welcome ${userData['name']}! Account created successfully.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else {
+        // Failed - show error
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Signup failed. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _retrySignup() {
+    setState(() {
+      _isSignupComplete = false;
+    });
+    _handleSignUp();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
