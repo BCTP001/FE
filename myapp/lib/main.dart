@@ -11,7 +11,6 @@ void main() => runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => BookmarksProvider()),
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],
       child: MyApp(),
     ));
@@ -25,20 +24,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         scaffoldBackgroundColor: Color(0xFFABF4D0),
       ),
-      home: Consumer<AuthProvider>(
-        builder: (context, authProvider, child) {
-          return authProvider.isLoggedIn ? MainApp() : WelcomeScreen();
-        },
-      ),
+      home: WelcomeScreen(),
       routes: {
         '/welcome': (context) => WelcomeScreen(),
         '/login': (context) => LoginScreen(),
         '/setup1': (context) => SetupScreen1(),
-        //'/setup2': (context) => SetupScreen2(),
-        //'/setup3': (context) => SetupScreen3(),
-        //'/setup4': (context) => SetupScreen4(),
-        //'/setup5': (context) => SetupScreen5(),
-        //'/main': (context) => MainApp(),
+        '/main': (context) => MainApp(),
       },
     );
   }

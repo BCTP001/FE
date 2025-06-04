@@ -32,8 +32,7 @@ class GraphQLService {
     const String signInMutation = '''
       mutation SignIn(\$username: String!, \$password: String!) {
         signIn(username: \$username, password: \$password) {
-          token
-          user {
+          signedInAs {
             id
             name
             username

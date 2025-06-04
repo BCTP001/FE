@@ -1,25 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import '../component/graphql_client.dart';
-
-// Auth Provider to manage authentication state
-class AuthProvider extends ChangeNotifier {
-  bool _isLoggedIn = false;
-  
-  bool get isLoggedIn => _isLoggedIn;
-  
-  void login() {
-    _isLoggedIn = true;
-    notifyListeners();
-  }
-  
-  void logout() {
-    _isLoggedIn = false;
-    notifyListeners();
-  }
-}
 
 // Welcome Screen (First screen)
 class WelcomeScreen extends StatelessWidget {
@@ -116,7 +97,89 @@ class WelcomeScreen extends StatelessWidget {
 }
 
 // Login Screen
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _loginnameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _loginnameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSignIn() async {
+    String enteredLoginname = _loginnameController.text.trim();
+    String enteredPassword = _passwordController.text.trim();
+
+    // Validate input
+    if (enteredLoginname.isEmpty || enteredPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('아이디와 비밀번호를 입력해주세요.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Call GraphQL SignIn API
+      final result = await GraphQLService.signIn(enteredLoginname, enteredPassword);
+
+      if (result != null && result['signIn'] != null) {
+        // Success - handle the response
+        final signInData = result['signIn'];
+        final userData = signInData['signedInAs'];
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('환영합니다, ${userData['name']}님!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pushNamed(context, '/main');
+        }
+      } else {
+        // Login failed
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('오류가 발생했습니다: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,6 +247,8 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextField(
+                  controller: _loginnameController,
+                  enabled: !_isLoading,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     border: InputBorder.none,
@@ -206,7 +271,9 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TextField(
+                  controller: _passwordController,
                   obscureText: true,
+                  enabled: !_isLoading,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     border: InputBorder.none,
@@ -216,10 +283,9 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 8),
               // Login button
               ElevatedButton(
-                onPressed: () {
-                  // Trigger login and navigate to main app
-                  Provider.of<AuthProvider>(context, listen: false).login();
-                },
+                onPressed: _isLoading ? null : () {
+                   _handleSignIn();
+                }, // Disable when loading
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF3E2723), // Dark brown
                   foregroundColor: Colors.white,
@@ -228,7 +294,16 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text("로그인"),
+                child: _isLoading
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : Text("로그인"),
               ),
               SizedBox(height: 8),
               // Small text at the bottom
