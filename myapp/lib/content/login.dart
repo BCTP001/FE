@@ -141,6 +141,8 @@ class _LoginScreenState extends State<LoginScreen> {
         // Success - handle the response
         final signInData = result['signIn'];
         final userData = signInData['signedInAs'];
+        
+        await GraphQLService.createShelf('default');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

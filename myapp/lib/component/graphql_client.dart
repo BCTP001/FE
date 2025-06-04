@@ -207,7 +207,7 @@ class GraphQLService {
   /// Get books in a shelf by shelf name
   /// 
   /// Returns list of books
-  static Future<List<dynamic>?> getBooksInShelf(String shelfName) async {
+  static Future<List<dynamic>> getBooksInShelf(String shelfName) async {
     final GraphQLClient client = getClient().value;
     
     const String getBooksQuery = '''
@@ -248,7 +248,7 @@ class GraphQLService {
       final QueryResult result = await client.query(options);
       if (result.hasException) {
         debugPrint('GraphQL Error: ${result.exception.toString()}');
-        return null;
+        return [];
       }
       
       if (result.data != null && result.data!['getBooksInShelf'] != null) {
@@ -258,7 +258,7 @@ class GraphQLService {
       return [];
     } catch (e) {
       debugPrint('Error in getBooksInShelf: $e');
-      return null;
+      return [];
     }
   }
 }

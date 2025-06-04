@@ -273,7 +273,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
                     icon: Icon(
                       isBookmarked ? Icons.bookmark_added : Icons.bookmark_add,
                       size: 40,
-                      color: isBookmarked ? Colors.black : Colors.white,
+                      color: isBookmarked ? const Color.fromARGB(255, 58, 10, 10) : Colors.white,
                     ),
                     onPressed: () {
                       setState(() {
