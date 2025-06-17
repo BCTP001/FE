@@ -2,91 +2,243 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../component/graphql_client.dart';
 
-// Welcome Screen (First screen)
+// Constants
+class AppColors {
+  static const Color primaryGreen = Color(0xFFABF4D0);
+  static const Color primaryBrown = Color(0xFF3E2723);
+  static const Color lightBrown = Color(0xFFD0C38F);
+  static const Color lightCream = Color(0xFFF8E6C8);
+  static const Color lightYellow = Color(0xFFFFDBAD);
+}
+
+class AppDimensions {
+  static const double defaultPadding = 24.0;
+  static const double smallSpacing = 8.0;
+  static const double mediumSpacing = 16.0;
+  static const double largeSpacing = 40.0;
+  static const double buttonHeight = 50.0;
+  static const double borderRadius = 8.0;
+  static const double bookLogoWidth = 225.0;
+  static const double bookLogoHeight = 284.0;
+}
+
+class AppStyles {
+  static TextStyle get titleStyle => GoogleFonts.nanumBrushScript(
+        fontSize: 40,
+        color: Colors.black,
+      );
+
+  static TextStyle get headerStyle => const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      );
+
+  static TextStyle get subHeaderStyle => const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      );
+
+  static TextStyle get bodyStyle => const TextStyle(
+        fontSize: 18,
+      );
+
+  static TextStyle get labelStyle => const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      );
+
+  static TextStyle get captionStyle => const TextStyle(
+        fontSize: 12,
+        color: Colors.black54,
+      );
+}
+
+// Common Widgets
+class CommonWidgets {
+  static Widget buildBookLogo() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Image.asset(
+          'assets/images/book.png',
+          fit: BoxFit.contain,
+          width: AppDimensions.bookLogoWidth,
+          height: AppDimensions.bookLogoHeight,
+        ),
+        Positioned(
+          child: Text(
+            '오늘의 책',
+            style: AppStyles.titleStyle,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static Widget buildInputField({
+    required String label,
+    required TextEditingController controller,
+    String? hintText,
+    bool isPassword = false,
+    bool enabled = true,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: AppStyles.labelStyle),
+        const SizedBox(height: AppDimensions.smallSpacing),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.lightBrown,
+            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+          ),
+          child: TextField(
+            controller: controller,
+            obscureText: isPassword,
+            enabled: enabled,
+            decoration: InputDecoration(
+              hintText: hintText,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.mediumSpacing,
+                vertical: 12,
+              ),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static Widget buildPrimaryButton({
+    required String text,
+    required VoidCallback? onPressed,
+    Color backgroundColor = AppColors.primaryBrown,
+    Color foregroundColor = Colors.white,
+    bool isLoading = false,
+    double? width,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        minimumSize: Size(width ?? double.infinity, AppDimensions.buttonHeight),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+        ),
+      ),
+      child: isLoading
+          ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : Text(text),
+    );
+  }
+
+  static Widget buildSecondaryButton({
+    required String text,
+    required VoidCallback? onPressed,
+    double? width,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.lightBrown,
+        foregroundColor: Colors.black,
+        minimumSize: Size(width ?? double.infinity, AppDimensions.buttonHeight),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+        ),
+      ),
+      child: Text(text),
+    );
+  }
+
+  static Widget buildNextButton({
+    required VoidCallback onPressed,
+  }) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.lightCream,
+          foregroundColor: Colors.black,
+          minimumSize: const Size(100, 45),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+          ),
+        ),
+        child: const Text("다음"),
+      ),
+    );
+  }
+
+  static AppBar buildAppBar({VoidCallback? onBackPressed}) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        onPressed: onBackPressed,
+      ),
+    );
+  }
+
+  static void showSnackBar(BuildContext context, String message,
+      {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+      ),
+    );
+  }
+}
+
+// Welcome Screen
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFABF4D0),
+      backgroundColor: AppColors.primaryGreen,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 40),
-              // Book icon
-              Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/book.png',
-                    fit: BoxFit.contain,
-                    width: 225,
-                    height: 284,
-                  ),
-                  Positioned(
-                    child: Text(
-                      '오늘의 책',
-                      style: GoogleFonts.nanumBrushScript(
-                        fontSize: 40,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              // Korean text
+              const SizedBox(height: AppDimensions.largeSpacing),
+              CommonWidgets.buildBookLogo(),
+              const SizedBox(height: 20),
               Text(
                 "당신만의 책을\n찾아보세요",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.nanumBrushScript(
-                  fontSize: 40,
-                  color: Colors.black,
-                ),
+                style: AppStyles.titleStyle,
               ),
-              Spacer(),
-              // Login button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFD0C38F),
-                  foregroundColor: Colors.black,
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text("로그인"),
+              const Spacer(),
+              CommonWidgets.buildSecondaryButton(
+                text: "로그인",
+                onPressed: () => Navigator.pushNamed(context, '/login'),
               ),
-              SizedBox(height: 12),
-              // Registration button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/setup1');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF3E2723), // Dark brown
-                  foregroundColor: Colors.white,
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text("회원가입"),
+              const SizedBox(height: 12),
+              CommonWidgets.buildPrimaryButton(
+                text: "회원가입",
+                onPressed: () => Navigator.pushNamed(context, '/setup1'),
               ),
-              SizedBox(height: 20),
-              // Small text at the bottom
+              const SizedBox(height: 20),
               Text(
                 "아이디/비밀번호 찾기",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black54,
-                ),
+                style: AppStyles.captionStyle,
               ),
             ],
           ),
@@ -98,8 +250,10 @@ class WelcomeScreen extends StatelessWidget {
 
 // Login Screen
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -115,206 +269,104 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleSignIn() async {
-    String enteredLoginname = _loginnameController.text.trim();
-    String enteredPassword = _passwordController.text.trim();
+    final loginname = _loginnameController.text.trim();
+    final password = _passwordController.text.trim();
 
-    // Validate input
-    if (enteredLoginname.isEmpty || enteredPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('아이디와 비밀번호를 입력해주세요.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
+    if (!_validateInput(loginname, password)) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
-      // Call GraphQL SignIn API
-      final result = await GraphQLService.signIn(enteredLoginname, enteredPassword);
+      final result = await GraphQLService.signIn(loginname, password);
 
-      if (result != null && result['signIn'] != null) {
-        // Success - handle the response
-        final signInData = result['signIn'];
-        final userData = signInData['signedInAs'];
-        
+      if (result?['signIn'] != null) {
+        final userData = result!['signIn']['signedInAs'];
         await GraphQLService.createShelf('default');
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('환영합니다, ${userData['name']}님!'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          CommonWidgets.showSnackBar(context, '환영합니다, ${userData['name']}님!');
           Navigator.pushNamed(context, '/main');
         }
       } else {
-        // Login failed
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.'),
-              backgroundColor: Colors.red,
-            ),
+          CommonWidgets.showSnackBar(
+            context,
+            '로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.',
+            isError: true,
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('오류가 발생했습니다: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        CommonWidgets.showSnackBar(
+          context,
+          '오류가 발생했습니다: ${e.toString()}',
+          isError: true,
         );
       }
     } finally {
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       }
     }
   }
 
+  bool _validateInput(String loginname, String password) {
+    if (loginname.isEmpty || password.isEmpty) {
+      CommonWidgets.showSnackBar(
+        context,
+        '아이디와 비밀번호를 입력해주세요.',
+        isError: true,
+      );
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFABF4D0),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: CommonWidgets.buildAppBar(
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 40),
-              // Book icon
-              Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/book.png',
-                    fit: BoxFit.contain,
-                    width: 225,
-                    height: 284,
-                  ),
-                  Positioned(
-                    child: Text(
-                      '오늘의 책',
-                      style: GoogleFonts.nanumBrushScript(
-                        fontSize: 40,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 40),
-              // Korean text
+              const SizedBox(height: AppDimensions.largeSpacing),
+              CommonWidgets.buildBookLogo(),
+              const SizedBox(height: AppDimensions.largeSpacing),
               Text(
                 "오늘의 책에\n로그인하기",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.nanumBrushScript(
-                  fontSize: 40,
-                  color: Colors.black,
-                ),
+                style: AppStyles.titleStyle,
               ),
-              SizedBox(height: 8),
-              // ID field
-              Text(
-                "아이디",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              const SizedBox(height: 32),
+              CommonWidgets.buildInputField(
+                label: "아이디",
+                controller: _loginnameController,
+                enabled: !_isLoading,
               ),
-              SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFD0C38F),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TextField(
-                  controller: _loginnameController,
-                  enabled: !_isLoading,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    border: InputBorder.none,
-                  ),
-                ),
+              const SizedBox(height: AppDimensions.mediumSpacing),
+              CommonWidgets.buildInputField(
+                label: "비밀번호",
+                controller: _passwordController,
+                isPassword: true,
+                enabled: !_isLoading,
               ),
-              SizedBox(height: 16),
-              // Password field
-              Text(
-                "비밀번호",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              const SizedBox(height: AppDimensions.defaultPadding),
+              CommonWidgets.buildPrimaryButton(
+                text: "로그인",
+                onPressed: _isLoading ? null : _handleSignIn,
+                isLoading: _isLoading,
               ),
-              SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFD0C38F),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  enabled: !_isLoading,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
-              // Login button
-              ElevatedButton(
-                onPressed: _isLoading ? null : () {
-                   _handleSignIn();
-                }, // Disable when loading
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF3E2723), // Dark brown
-                  foregroundColor: Colors.white,
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: _isLoading
-                    ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : Text("로그인"),
-              ),
-              SizedBox(height: 8),
-              // Small text at the bottom
+              const SizedBox(height: AppDimensions.mediumSpacing),
               Text(
                 "아이디/비밀번호 찾기",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black54,
-                ),
+                style: AppStyles.captionStyle,
               ),
             ],
           ),
@@ -324,171 +376,153 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// Registration screens (Setup 1-5)
-class SetupScreen1 extends StatelessWidget {
-  final TextEditingController _loginNameController = TextEditingController();
+// Base Setup Screen
+abstract class BaseSetupScreen extends StatelessWidget {
+  final String title;
+  final String inputLabel;
+  final String inputHint;
+  final bool isPassword;
+
+  const BaseSetupScreen({
+    Key? key,
+    required this.title,
+    required this.inputLabel,
+    required this.inputHint,
+    this.isPassword = false,
+  }) : super(key: key);
+
+  Widget buildBody(BuildContext context, TextEditingController controller);
 
   @override
   Widget build(BuildContext context) {
+    final controller = TextEditingController();
+
     return Scaffold(
-      backgroundColor: Color(0xFFABF4D0),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: CommonWidgets.buildAppBar(
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                "계정 생성",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 40),
-              Text(
-                "이름을 적어주세요",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFD0C38F),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TextField(
-                  controller: _loginNameController,
-                  decoration: InputDecoration(
-                    hintText: "example",
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              Spacer(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    String enteredLoginName = _loginNameController.text.trim();
-                    Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (context) => SetupScreen2(
-                          loginName: enteredLoginName,
-                        ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF8E6C8),
-                    foregroundColor: Colors.black,
-                    minimumSize: Size(100, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text("다음"),
-                ),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
+          child: buildBody(context, controller),
         ),
       ),
     );
   }
 }
 
+// Setup Screen 1 - Name Input
+class SetupScreen1 extends BaseSetupScreen {
+  const SetupScreen1({Key? key})
+      : super(
+          key: key,
+          title: "계정 생성",
+          inputLabel: "이름을 적어주세요",
+          inputHint: "example",
+        );
+
+  @override
+  Widget buildBody(BuildContext context, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(title, style: AppStyles.headerStyle),
+        const SizedBox(height: AppDimensions.largeSpacing),
+        Text(inputLabel, style: AppStyles.subHeaderStyle),
+        const SizedBox(height: AppDimensions.mediumSpacing),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.lightBrown,
+            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+          ),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: inputHint,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.mediumSpacing,
+                vertical: 12,
+              ),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        const Spacer(),
+        CommonWidgets.buildNextButton(
+          onPressed: () {
+            final loginName = controller.text.trim();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SetupScreen2(loginName: loginName),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+// Setup Screen 2 - Password Input
 class SetupScreen2 extends StatelessWidget {
   final String loginName;
-  final TextEditingController _passwordController = TextEditingController();
 
-  SetupScreen2({Key? key, required this.loginName}) : super(key: key);
-  
+  const SetupScreen2({Key? key, required this.loginName}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final passwordController = TextEditingController();
+
     return Scaffold(
-      backgroundColor: Color(0xFFABF4D0),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: CommonWidgets.buildAppBar(
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                "계정 생성",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 40),
-              Text(
-                "비밀번호를 적어주세요",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 16),
+              Text("계정 생성", style: AppStyles.headerStyle),
+              const SizedBox(height: AppDimensions.largeSpacing),
+              Text("비밀번호를 적어주세요", style: AppStyles.subHeaderStyle),
+              const SizedBox(height: AppDimensions.mediumSpacing),
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFD0C38F),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.lightBrown,
+                  borderRadius:
+                      BorderRadius.circular(AppDimensions.borderRadius),
                 ),
                 child: TextField(
-                  controller: _passwordController,
+                  controller: passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: "example",
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: AppDimensions.mediumSpacing,
+                      vertical: 12,
+                    ),
                     border: InputBorder.none,
                   ),
                 ),
               ),
-              Spacer(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    String enteredPassword = _passwordController.text.trim();
-                    Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (context) => SetupScreen3(
-                          loginName: loginName,
-                          password: enteredPassword,
-                        ),
+              const Spacer(),
+              CommonWidgets.buildNextButton(
+                onPressed: () {
+                  final password = passwordController.text.trim();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SetupScreen3(
+                        loginName: loginName,
+                        password: password,
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF8E6C8),
-                    foregroundColor: Colors.black,
-                    minimumSize: Size(100, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                  child: Text("다음"),
-                ),
+                  );
+                },
               ),
             ],
           ),
@@ -498,87 +532,69 @@ class SetupScreen2 extends StatelessWidget {
   }
 }
 
+// Setup Screen 3 - Nickname Input
 class SetupScreen3 extends StatelessWidget {
   final String loginName;
   final String password;
-  final TextEditingController _nicknameController = TextEditingController();
 
-  SetupScreen3({Key? key, required this.loginName, required this.password}) : super(key: key);
+  const SetupScreen3({
+    Key? key,
+    required this.loginName,
+    required this.password,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final nicknameController = TextEditingController();
+
     return Scaffold(
-      backgroundColor: Color(0xFFABF4D0),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: CommonWidgets.buildAppBar(
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                "계정 생성",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 40),
-              Text(
-                "닉네임을 적어주세요",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 16),
+              Text("계정 생성", style: AppStyles.headerStyle),
+              const SizedBox(height: AppDimensions.largeSpacing),
+              Text("닉네임을 적어주세요", style: AppStyles.subHeaderStyle),
+              const SizedBox(height: AppDimensions.mediumSpacing),
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFD0C38F),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.lightBrown,
+                  borderRadius:
+                      BorderRadius.circular(AppDimensions.borderRadius),
                 ),
                 child: TextField(
-                  controller: _nicknameController,
-                  decoration: InputDecoration(
+                  controller: nicknameController,
+                  decoration: const InputDecoration(
                     hintText: "활동할 닉네임",
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: AppDimensions.mediumSpacing,
+                      vertical: 12,
+                    ),
                     border: InputBorder.none,
                   ),
                 ),
               ),
-              Spacer(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    String enteredNickname = _nicknameController.text.trim();
-                    Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (context) => SetupScreen4(
-                          loginName: loginName,
-                          password: password,
-                          nickname: enteredNickname,
-                        ),
+              const Spacer(),
+              CommonWidgets.buildNextButton(
+                onPressed: () {
+                  final nickname = nicknameController.text.trim();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SetupScreen4(
+                        loginName: loginName,
+                        password: password,
+                        nickname: nickname,
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF8E6C8),
-                    foregroundColor: Colors.black,
-                    minimumSize: Size(100, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                  child: Text("다음"),
-                ),
+                  );
+                },
               ),
             ],
           ),
@@ -588,96 +604,39 @@ class SetupScreen3 extends StatelessWidget {
   }
 }
 
+// Setup Screen 4 - Genre Selection
 class SetupScreen4 extends StatelessWidget {
   final String loginName;
   final String password;
   final String nickname;
 
-  const SetupScreen4({Key? key, required this.loginName, required this.password, required this.nickname}) : super(key: key);
+  const SetupScreen4({
+    Key? key,
+    required this.loginName,
+    required this.password,
+    required this.nickname,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFABF4D0),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: CommonWidgets.buildAppBar(
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                "계정 생성",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "원하는 장르를 골라주세요",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: 9,
-                  itemBuilder: (context, index) {
-                    if (index == 8) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFFDBAD),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Icon(Icons.person, color: Colors.white),
-                          ),
-                        ),
-                      );
-                    }
-                    
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFDBAD),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "책이름",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "저자", 
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
+              Text("계정 생성", style: AppStyles.headerStyle),
+              const SizedBox(height: 20),
+              Text("원하는 장르를 골라주세요", style: AppStyles.subHeaderStyle),
+              const SizedBox(height: 20),
+              Expanded(child: _buildGenreGrid()),
+              const SizedBox(height: 10),
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -686,30 +645,17 @@ class SetupScreen4 extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (context) => SetupScreen5(
-                          loginName: loginName,
-                          password: password,
-                          nickname: nickname,
-                        ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF8E6C8),
-                    foregroundColor: Colors.black,
-                    minimumSize: Size(100, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+              const SizedBox(height: AppDimensions.mediumSpacing),
+              CommonWidgets.buildNextButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SetupScreen5(
+                      loginName: loginName,
+                      password: password,
+                      nickname: nickname,
                     ),
                   ),
-                  child: Text("다음"),
                 ),
               ),
             ],
@@ -718,12 +664,53 @@ class SetupScreen4 extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildGenreGrid() {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+      ),
+      itemCount: 9,
+      itemBuilder: (context, index) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.lightYellow,
+            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
+          ),
+          child: index == 8
+              ? const Center(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.person, color: Colors.white),
+                  ),
+                )
+              : const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "책이름",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "저자",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+        );
+      },
+    );
+  }
 }
 
+// Setup Screen 5 - Registration Complete
 class SetupScreen5 extends StatefulWidget {
-  final String loginName;    // username from SetupScreen1
-  final String password;     // password from SetupScreen2
-  final String nickname;     // name from SetupScreen3
+  final String loginName;
+  final String password;
+  final String nickname;
 
   const SetupScreen5({
     Key? key,
@@ -743,127 +730,91 @@ class _SetupScreen5State extends State<SetupScreen5> {
   @override
   void initState() {
     super.initState();
-    // Automatically trigger signup when screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleSignUp();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleSignUp());
   }
 
   Future<void> _handleSignUp() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
-      // Call the GraphQL signup API with the collected data
       final result = await GraphQLService.signUp(
-        widget.nickname,    // name parameter
-        widget.loginName,   // username parameter
-        widget.password,    // password parameter
+        widget.nickname,
+        widget.loginName,
+        widget.password,
       );
 
-      if (result != null && result['signUp'] != null) {
-        // Success - handle the response
-        final userData = result['signUp'];
-        
+      if (result?['signUp'] != null) {
+        final userData = result!['signUp'];
         if (mounted) {
-          setState(() {
-            _isSignupComplete = true;
-          });
-          
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Welcome ${userData['name']}! Account created successfully.'),
-              backgroundColor: Colors.green,
-            ),
+          setState(() => _isSignupComplete = true);
+          CommonWidgets.showSnackBar(
+            context,
+            'Welcome ${userData['name']}! Account created successfully.',
           );
         }
       } else {
-        // Failed - show error
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Signup failed. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
+          CommonWidgets.showSnackBar(
+            context,
+            'Signup failed. Please try again.',
+            isError: true,
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        CommonWidgets.showSnackBar(
+          context,
+          'Error: ${e.toString()}',
+          isError: true,
         );
       }
     } finally {
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       }
     }
-  }
-
-  void _retrySignup() {
-    setState(() {
-      _isSignupComplete = false;
-    });
-    _handleSignUp();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFABF4D0),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: CommonWidgets.buildAppBar(
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 40),
+              const SizedBox(height: AppDimensions.largeSpacing),
               Text(
                 "회원가입 완료!",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppStyles.headerStyle,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "축하합니다!\n이제 당신을 위한\n도서를 찾아보세요",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: AppStyles.bodyStyle,
               ),
-              Spacer(),
+              const Spacer(),
               ElevatedButton(
-                onPressed: () {
-                  // After registration, log the user in
-                  Navigator.pushNamed(context, '/login');
-                },
+                onPressed: () => Navigator.pushNamed(context, '/login'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFF8E6C8),
+                  backgroundColor: AppColors.lightCream,
                   foregroundColor: Colors.black,
-                  minimumSize: Size(double.infinity, 50),
+                  minimumSize:
+                      const Size(double.infinity, AppDimensions.buttonHeight),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius:
+                        BorderRadius.circular(AppDimensions.borderRadius),
                   ),
                 ),
-                child: Text("시작하기"),
+                child: const Text("시작하기"),
               ),
             ],
           ),

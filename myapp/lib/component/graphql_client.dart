@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 
 class GraphQLService {
   static ValueNotifier<GraphQLClient>? _client;
-  static const String _baseUrl = "https://redesigned-carnival-xp6v4wpj9pw2jv-4000.app.github.dev/";
+  static const String _baseUrl =
+      "https://redesigned-carnival-xp6v4wpj9pw2jv-4000.app.github.dev/";
 
   /// Get or initialize GraphQL client
   static ValueNotifier<GraphQLClient> getClient() {
     if (_client == null) {
       // Initialize GraphQL client
       final HttpLink httpLink = HttpLink(_baseUrl);
-      
+
       // Create the GraphQL client
       _client = ValueNotifier<GraphQLClient>(
         GraphQLClient(
@@ -19,16 +20,17 @@ class GraphQLService {
         ),
       );
     }
-    
+
     return _client!;
   }
 
   /// Sign in with username and password
-  /// 
+  ///
   /// Returns user data and token on success, null on failure
-  static Future<Map<String, dynamic>?> signIn(String username, String password) async {
+  static Future<Map<String, dynamic>?> signIn(
+      String username, String password) async {
     final GraphQLClient client = getClient().value;
-    
+
     const String signInMutation = '''
       mutation SignIn(\$username: String!, \$password: String!) {
         signIn(username: \$username, password: \$password) {
@@ -40,7 +42,7 @@ class GraphQLService {
         }
       }
     ''';
-    
+
     final MutationOptions options = MutationOptions(
       document: gql(signInMutation),
       variables: {
@@ -48,7 +50,7 @@ class GraphQLService {
         'password': password,
       },
     );
-    
+
     try {
       final QueryResult result = await client.mutate(options);
       if (result.hasException) {
@@ -63,11 +65,12 @@ class GraphQLService {
   }
 
   /// Sign up with name, username and password
-  /// 
+  ///
   /// Returns user data on success, null on failure
-  static Future<Map<String, dynamic>?> signUp(String name, String username, String password) async {
+  static Future<Map<String, dynamic>?> signUp(
+      String name, String username, String password) async {
     final GraphQLClient client = getClient().value;
-    
+
     const String signUpMutation = '''
       mutation SignUp(\$name: String!, \$username: String!, \$password: String!) {
         signUp(name: \$name, username: \$username, password: \$password) {
@@ -77,7 +80,7 @@ class GraphQLService {
         }
       }
     ''';
-    
+
     final MutationOptions options = MutationOptions(
       document: gql(signUpMutation),
       variables: {
@@ -86,7 +89,7 @@ class GraphQLService {
         'password': password,
       },
     );
-    
+
     try {
       final QueryResult result = await client.mutate(options);
       if (result.hasException) {
@@ -99,23 +102,23 @@ class GraphQLService {
       return null;
     }
   }
-  
+
   /// Sign out current user
-  /// 
+  ///
   /// Returns success status
   static Future<bool> signOut() async {
     final GraphQLClient client = getClient().value;
-    
+
     const String signOutMutation = '''
       mutation SignOut {
         signOut
       }
     ''';
-    
+
     final MutationOptions options = MutationOptions(
       document: gql(signOutMutation),
     );
-    
+
     try {
       final QueryResult result = await client.mutate(options);
       if (result.hasException) {
@@ -130,11 +133,11 @@ class GraphQLService {
   }
 
   /// Create a new shelf with given name
-  /// 
+  ///
   /// Returns success message
   static Future<Map<String, dynamic>?> createShelf(String shelfName) async {
     final GraphQLClient client = getClient().value;
-    
+
     const String createShelfMutation = '''
       mutation CreateShelf(\$request: CreateShelfRequest!) {
         createShelf(request: \$request) {
@@ -142,16 +145,14 @@ class GraphQLService {
         }
       }
     ''';
-    
+
     final MutationOptions options = MutationOptions(
       document: gql(createShelfMutation),
       variables: {
-        'request': {
-          "shelfName": shelfName
-        }
+        'request': {"shelfName": shelfName}
       },
     );
-    
+
     try {
       final QueryResult result = await client.mutate(options);
       if (result.hasException) {
@@ -166,11 +167,12 @@ class GraphQLService {
   }
 
   /// Update shelf contents with contain and exclude lists
-  /// 
+  ///
   /// Returns updated shelf info
-  static Future<Map<String, dynamic>?> updateShelf(String shelfName, List<String> containList, List<String> excludeList) async {
+  static Future<Map<String, dynamic>?> updateShelf(String shelfName,
+      List<String> containList, List<String> excludeList) async {
     final GraphQLClient client = getClient().value;
-    
+
     const String updateShelfMutation = '''
       mutation UpdateShelf(\$request: UpdateShelfRequest!) {
         updateShelf(request: \$request) {
@@ -179,7 +181,7 @@ class GraphQLService {
         }
       }
     ''';
-    
+
     final MutationOptions options = MutationOptions(
       document: gql(updateShelfMutation),
       variables: {
@@ -190,7 +192,7 @@ class GraphQLService {
         }
       },
     );
-    
+
     try {
       final QueryResult result = await client.mutate(options);
       if (result.hasException) {
@@ -205,11 +207,11 @@ class GraphQLService {
   }
 
   /// Get books in a shelf by shelf name
-  /// 
+  ///
   /// Returns list of books
   static Future<List<dynamic>> getBooksInShelf(String shelfName) async {
     final GraphQLClient client = getClient().value;
-    
+
     const String getBooksQuery = '''
       query GetBooksInShelf(\$request: GetBooksInShelfRequest!) {
         getBooksInShelf(request: \$request) {
@@ -234,27 +236,25 @@ class GraphQLService {
         }
       }
     ''';
-    
+
     final QueryOptions options = QueryOptions(
       document: gql(getBooksQuery),
       variables: {
-        'request': {
-          "shelfName": shelfName
-        }
+        'request': {"shelfName": shelfName}
       },
     );
-    
+
     try {
       final QueryResult result = await client.query(options);
       if (result.hasException) {
         debugPrint('GraphQL Error: ${result.exception.toString()}');
         return [];
       }
-      
+
       if (result.data != null && result.data!['getBooksInShelf'] != null) {
         return result.data!['getBooksInShelf'] as List<dynamic>;
       }
-      
+
       return [];
     } catch (e) {
       debugPrint('Error in getBooksInShelf: $e');

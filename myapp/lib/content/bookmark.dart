@@ -21,15 +21,13 @@ class _BookmarkContentState extends State<BookmarkContent> {
     super.initState();
     _loadBooks();
   }
-  
-
 
   Future<void> _loadBooks() async {
     setState(() {
       isLoading = true;
       error = null;
     });
-    
+
     try {
       final result = await getBooksInShelf();
       setState(() {
@@ -48,23 +46,22 @@ class _BookmarkContentState extends State<BookmarkContent> {
   Widget build(BuildContext context) {
     final ValueNotifier<GraphQLClient> client = GraphQLService.getClient();
     return GraphQLProvider(
-      client: client,
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        backgroundColor: Color(0xFF80471C),
-        body: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSortBar(),
-              SizedBox(height: 20),
-              _buildBookGrid(2)
-            ],
+        client: client,
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          backgroundColor: Color(0xFF80471C),
+          body: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSortBar(),
+                SizedBox(height: 20),
+                _buildBookGrid(2)
+              ],
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
   Widget _buildBookGrid(int columnCount) {
@@ -103,53 +100,52 @@ class _BookmarkContentState extends State<BookmarkContent> {
     String bookId = book['isbn'];
 
     return Consumer<BookmarksProvider>(
-      builder: (context, bookmarksProvider, child) {
-        bool isBookmarked = bookmarksProvider.isBookmarked(bookId);
+        builder: (context, bookmarksProvider, child) {
+      bool isBookmarked = bookmarksProvider.isBookmarked(bookId);
 
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BookDetailsScreen(
-                  book: book,
-                  isInitiallyBookmarked: isBookmarked,
-                  onBookmarkToggle: (String id) {
-                    if (bookmarksProvider.isBookmarked(id)) {
-                      bookmarksProvider.removeBookmark(id);
-                    } else {
-                      bookmarksProvider.addBookmark(id);
-                    }
-                  },
-                ),
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BookDetailsScreen(
+                book: book,
+                isInitiallyBookmarked: isBookmarked,
+                onBookmarkToggle: (String id) {
+                  if (bookmarksProvider.isBookmarked(id)) {
+                    bookmarksProvider.removeBookmark(id);
+                  } else {
+                    bookmarksProvider.addBookmark(id);
+                  }
+                },
               ),
-            );
-          },
-          child: Card(
-            color: Color(0xFF80471C),
-            margin: EdgeInsets.symmetric(vertical: 4),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
             ),
-            child: Container(
-              height: 180, // Fixed height for the card
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Changed to Row for horizontal layout
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: _buildBookCover(book['cover']),
-                  ),
-                ],
-              ),
+          );
+        },
+        child: Card(
+          color: Color(0xFF80471C),
+          margin: EdgeInsets.symmetric(vertical: 4),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Container(
+            height: 180, // Fixed height for the card
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceBetween, // Changed to Row for horizontal layout
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: _buildBookCover(book['cover']),
+                ),
+              ],
             ),
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildBookCover(String? coverUrl) {
@@ -170,8 +166,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
 
   Future<List<dynamic>> getBooksInShelf() async {
     try {
-      final result =
-          await GraphQLService.getBooksInShelf('ex');
+      final result = await GraphQLService.getBooksInShelf('ex');
       if (result.isNotEmpty) {
         debugPrint('Default shelf created successfully');
         return result;
@@ -212,7 +207,6 @@ class _BookmarkContentState extends State<BookmarkContent> {
   Widget _buildSortBar() {
     bool isListView = true; // true for list view, false for grid view
     return StatefulBuilder(builder: (context, setState) {
-
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
@@ -256,15 +250,15 @@ class _BookmarkContentState extends State<BookmarkContent> {
 class BookmarksProvider extends ChangeNotifier {
   final List<String> _bookmarkedBooks = [];
   final List<String> _excludedBookmarked = [];
-  
+
   List<String> get bookmarkedBooks => _bookmarkedBooks;
-  
+
   Future<void> addBookmark(String bookId) async {
     _bookmarkedBooks.add(bookId);
     await _updateShelf();
     notifyListeners();
   }
-  
+
   Future<void> removeBookmark(String bookId) async {
     _bookmarkedBooks.remove(bookId);
     _excludedBookmarked.add(bookId);
@@ -273,18 +267,19 @@ class BookmarksProvider extends ChangeNotifier {
   }
 
   Future<void> _updateShelf() async {
-  try {
-    final shelfResult = await GraphQLService.updateShelf('ex', _bookmarkedBooks, _excludedBookmarked);
-    if (shelfResult != null) {
-      debugPrint('Default shelf updated successfully');
-    } else {
-      debugPrint('Failed to update default shelf');
+    try {
+      final shelfResult = await GraphQLService.updateShelf(
+          'ex', _bookmarkedBooks, _excludedBookmarked);
+      if (shelfResult != null) {
+        debugPrint('Default shelf updated successfully');
+      } else {
+        debugPrint('Failed to update default shelf');
+      }
+    } catch (e) {
+      debugPrint('Error update default shelf: $e');
     }
-  } catch (e) {
-    debugPrint('Error update default shelf: $e');
   }
-}
-  
+
   bool isBookmarked(String bookId) {
     return _bookmarkedBooks.contains(bookId);
   }

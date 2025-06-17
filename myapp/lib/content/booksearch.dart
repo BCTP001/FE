@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../component/booksearch.dart';
+import '../component/search.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../component/graphql_client.dart';
 

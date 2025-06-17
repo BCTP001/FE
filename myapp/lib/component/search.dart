@@ -36,7 +36,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
       default:
         queryType = "Keyword";
     }
-    
+
     final searchOption =
         SearchOption(searchQuery: searchQuery, queryType: queryType);
 
@@ -216,83 +216,83 @@ class _BookSearchContentState extends State<BookSearchContent> {
     String bookId = book['isbn'];
 
     return Consumer<BookmarksProvider>(
-      builder: (context, bookmarksProvider, child) {
-        bool isBookmarked = bookmarksProvider.isBookmarked(bookId);
+        builder: (context, bookmarksProvider, child) {
+      bool isBookmarked = bookmarksProvider.isBookmarked(bookId);
 
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BookDetailsScreen(
-                  book: book,
-                  isInitiallyBookmarked: isBookmarked,
-                  onBookmarkToggle: (String id) {
-                    if (bookmarksProvider.isBookmarked(id)) {
-                      bookmarksProvider.removeBookmark(id);
-                    } else {
-                      bookmarksProvider.addBookmark(id);
-                    }
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BookDetailsScreen(
+                book: book,
+                isInitiallyBookmarked: isBookmarked,
+                onBookmarkToggle: (String id) {
+                  if (bookmarksProvider.isBookmarked(id)) {
+                    bookmarksProvider.removeBookmark(id);
+                  } else {
+                    bookmarksProvider.addBookmark(id);
+                  }
+                },
+              ),
+            ),
+          );
+        },
+        child: Card(
+          color: Color(0xFF80471C),
+          margin: EdgeInsets.symmetric(vertical: 4),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Container(
+            height: 180, // Fixed height for the card
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceBetween, // Changed to Row for horizontal layout
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: _buildBookCover(book['cover']),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: _buildBookInfo(book),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    isBookmarked ? Icons.bookmark_added : Icons.bookmark_add,
+                    size: 40,
+                    color: isBookmarked
+                        ? const Color.fromARGB(255, 58, 10, 10)
+                        : Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if (isBookmarked) {
+                        bookmarksProvider.removeBookmark(bookId);
+                      } else {
+                        bookmarksProvider.addBookmark(bookId);
+                      }
+                    });
                   },
                 ),
-              ),
-            );
-          },
-          child: Card(
-            color: Color(0xFF80471C),
-            margin: EdgeInsets.symmetric(vertical: 4),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-            child: Container(
-              height: 180, // Fixed height for the card
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Changed to Row for horizontal layout
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: _buildBookCover(book['cover']),
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: _buildBookInfo(book),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      isBookmarked ? Icons.bookmark_added : Icons.bookmark_add,
-                      size: 40,
-                      color: isBookmarked ? const Color.fromARGB(255, 58, 10, 10) : Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        if (isBookmarked) {
-                          bookmarksProvider.removeBookmark(bookId);
-                        }
-                        else {
-                          bookmarksProvider.addBookmark(bookId);
-                        }
-                      });
-                    },
-                  ),
-                ],
-              ),
+              ],
             ),
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildBookCover(String? coverUrl) {

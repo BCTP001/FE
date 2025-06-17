@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'content/home.dart';
-import 'content/search.dart';
+import 'content/booksearch.dart';
 import 'content/bookmark.dart';
 import 'content/login.dart';
 
-void main() => runApp(
-    MultiProvider(
+void main() => runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => BookmarksProvider()),
       ],
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 
 // Your original MainApp with fluid navigation bar
 class MainApp extends StatefulWidget {
