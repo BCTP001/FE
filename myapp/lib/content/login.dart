@@ -281,7 +281,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (result?['signIn'] != null) {
         final userData = result!['signIn']['signedInAs'];
-        await GraphQLService.createShelf('default');
 
         if (mounted) {
           CommonWidgets.showSnackBar(context, '환영합니다, ${userData['name']}님!');
@@ -745,7 +744,10 @@ class _SetupScreen5State extends State<SetupScreen5> {
 
       if (result?['signUp'] != null) {
         final userData = result!['signUp'];
+        final userId = userData['id'];
         if (mounted) {
+          await GraphQLService.createShelf('default', userId);
+
           setState(() => _isSignupComplete = true);
           CommonWidgets.showSnackBar(
             context,
