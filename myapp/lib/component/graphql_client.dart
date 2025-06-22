@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 class GraphQLService {
   static ValueNotifier<GraphQLClient>? _client;
   static const String _baseUrl =
-      "https://redesigned-carnival-xp6v4wpj9pw2jv-4000.app.github.dev/";
-
+      "https://cuddly-eureka-v77v7pr94qg36xrx-4000.app.github.dev/";
   /// Get or initialize GraphQL client
   static ValueNotifier<GraphQLClient> getClient() {
     if (_client == null) {
@@ -135,7 +134,7 @@ class GraphQLService {
   /// Create a new shelf with given name
   ///
   /// Returns success message
-  static Future<Map<String, dynamic>?> createShelf(String shelfName) async {
+    static Future<Map<String, dynamic>?> createShelf(String shelfName, String userId) async {
     final GraphQLClient client = getClient().value;
 
     const String createShelfMutation = '''
@@ -149,7 +148,10 @@ class GraphQLService {
     final MutationOptions options = MutationOptions(
       document: gql(createShelfMutation),
       variables: {
-        'request': {"shelfName": shelfName}
+        'request': {
+          'shelfName': shelfName,
+          'userId': userId,
+        }
       },
     );
 
