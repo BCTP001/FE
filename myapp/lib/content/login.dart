@@ -282,10 +282,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (result?['signIn'] != null) {
         final userData = result!['signIn']['signedInAs'];
 
-        if (mounted) {
-          CommonWidgets.showSnackBar(context, '환영합니다, ${userData['name']}님!');
-          Navigator.pushNamed(context, '/main');
-        }
+        CommonWidgets.showSnackBar(context, '환영합니다, ${userData['name']}님!');
+        Navigator.pushNamed(context, '/main');
       } else {
         if (mounted) {
           CommonWidgets.showSnackBar(

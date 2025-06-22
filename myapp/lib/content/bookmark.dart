@@ -166,7 +166,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
 
   Future<List<dynamic>> getBooksInShelf() async {
     try {
-      final result = await GraphQLService.getBooksInShelf('ex');
+      final result = await GraphQLService.getBooksInShelf('default');
       if (result.isNotEmpty) {
         debugPrint('Default shelf created successfully');
         return result;
@@ -268,8 +268,10 @@ class BookmarksProvider extends ChangeNotifier {
 
   Future<void> _updateShelf() async {
     try {
+      debugPrint(_bookmarkedBooks.toString());
+      debugPrint(_excludedBookmarked.toString());
       final shelfResult = await GraphQLService.updateShelf(
-          'ex', _bookmarkedBooks, _excludedBookmarked);
+          'default', _bookmarkedBooks, _excludedBookmarked);
       if (shelfResult != null) {
         debugPrint('Default shelf updated successfully');
       } else {

@@ -213,7 +213,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
   }
 
   Widget _buildBookCard(dynamic book, BuildContext context) {
-    String bookId = book['isbn'];
+    String bookId = book['isbn13'];
 
     return Consumer<BookmarksProvider>(
         builder: (context, bookmarksProvider, child) {
@@ -364,6 +364,7 @@ const String searchBooksQuery = """
       itemPage
       toc
     }
+    isbn13
   }
 }
 """;
