@@ -168,14 +168,14 @@ class _BookmarkContentState extends State<BookmarkContent> {
     try {
       final result = await GraphQLService.getBooksInShelf('default');
       if (result.isNotEmpty) {
-        debugPrint('Default shelf created successfully');
+        debugPrint('Get books in shelf successfully');
         return result;
       } else {
-        debugPrint('Failed to create default shelf');
+        debugPrint('Failed to get books in shelf');
         return [];
       }
     } catch (e) {
-      debugPrint('Error creating default shelf: $e');
+      debugPrint('Error in getting books in shelf: $e');
       return [];
     }
   }
