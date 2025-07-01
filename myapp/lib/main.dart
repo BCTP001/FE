@@ -56,7 +56,7 @@ class _MainApp extends State<MainApp> {
   @override
   Widget build(context) {
     return Scaffold(
-      backgroundColor: Color(0xFF7EEDC3),
+      backgroundColor: Color(0xFF9AD9B8),
       extendBody: true,
       body: _child,
       bottomNavigationBar: FluidNavBar(
@@ -81,7 +81,7 @@ class _MainApp extends State<MainApp> {
         onChange: _handleNavigationChange,
         style: FluidNavBarStyle(
           iconUnselectedForegroundColor: Colors.white,
-          barBackgroundColor: Color(0xFFE8DCC4),
+          barBackgroundColor: Color(0xFFE5D8BE),
         ),
         scaleFactor: 1.5,
         defaultIndex: 0,

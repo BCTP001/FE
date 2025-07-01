@@ -188,7 +188,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
         width: MediaQuery.of(context).size.width * 0.85,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFFE8DCC4),
+          color: const Color(0xFFE5D8BE),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(

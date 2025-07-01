@@ -101,7 +101,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Color(0xFF7EEDC3),
+      backgroundColor: Color(0xFF9AD9B8),
       centerTitle: true,
       title: Text(
         '어떤 책을 찾으시나요?',
@@ -131,7 +131,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         height: 48,
         margin: EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
-          color: Color(0xFFE8DCC4),
+          color: Color(0xFFE5D8BE),
           borderRadius: BorderRadius.circular(30),
         ),
         padding: EdgeInsets.symmetric(horizontal: 12),
@@ -168,7 +168,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         style: GoogleFonts.jua(fontSize: 16, color: Colors.black),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Color(0xFFE8DCC4),
+          fillColor: Color(0xFFE5D8BE),
           hintText: '원하시는 책을 검색해보세요',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
@@ -325,7 +325,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
           book['categoryName'],
           style: GoogleFonts.jua(
             fontSize: 13,
-            color: Color(0xFF7EEDC3),
+            color: Color(0xFF9AD9B8),
           ),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,

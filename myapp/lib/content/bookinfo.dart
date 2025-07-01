@@ -47,13 +47,13 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF7EEDC3),
+        backgroundColor: Color(0xFF9AD9B8),
         leading: IconButton(
           icon: const Icon(Icons.keyboard_arrow_left),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: Color(0xFF7EEDC3),
+      backgroundColor: Color(0xFF9AD9B8),
       body: SingleChildScrollView(
         // ScrollView for the entire body
         child: Padding(
@@ -308,7 +308,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                 decoration: BoxDecoration(
                   color: Color(0xFF28DF99),
                   borderRadius: BorderRadius.circular(16),
-                  // border: Border.all(color: Color(0xFF7EEDC3)),
+                  // border: Border.all(color: Color(0xFF9AD9B8)),
                 ),
                 child: Text(
                   '#$category',
