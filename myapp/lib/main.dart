@@ -81,7 +81,7 @@ class _MainApp extends State<MainApp> {
         onChange: _handleNavigationChange,
         style: FluidNavBarStyle(
           iconUnselectedForegroundColor: Colors.white,
-          barBackgroundColor: Color(0xFFE5D8BE),
+          barBackgroundColor: Color(0xFFFFFAE3),
         ),
         scaleFactor: 1.5,
         defaultIndex: 0,

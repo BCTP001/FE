@@ -49,7 +49,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
         client: client,
         child: Scaffold(
           appBar: _buildAppBar(),
-          backgroundColor: Color(0xFF80471C),
+          backgroundColor: Color(0xFF726953),
           body: Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
@@ -97,7 +97,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
   }
 
   Widget _buildBookCard(dynamic book, BuildContext context) {
-    String bookId = book['isbn'];
+    String bookId = book['isbn13'];
 
     return Consumer<BookmarksProvider>(
         builder: (context, bookmarksProvider, child) {
@@ -123,7 +123,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
           );
         },
         child: Card(
-          color: Color(0xFF80471C),
+          color: Color(0xFF726953),
           margin: EdgeInsets.symmetric(vertical: 4),
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -182,13 +182,13 @@ class _BookmarkContentState extends State<BookmarkContent> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Color(0xFF80471C),
+      backgroundColor: Color(0xFF726953),
       centerTitle: true,
       title: Container(
         width: MediaQuery.of(context).size.width * 0.85,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFFE5D8BE),
+          color: const Color(0xFFF0ECB2),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
