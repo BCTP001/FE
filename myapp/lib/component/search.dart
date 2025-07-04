@@ -84,7 +84,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
     return Scaffold(
       appBar: _buildAppBar(),
-      backgroundColor: Color(0xFF80471C),
+      backgroundColor: Color(0xFF726953),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -131,7 +131,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         height: 48,
         margin: EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
-          color: Color(0xFFE5D8BE),
+          color: Color(0xFFF0ECB2),
           borderRadius: BorderRadius.circular(30),
         ),
         padding: EdgeInsets.symmetric(horizontal: 12),
@@ -168,7 +168,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         style: GoogleFonts.jua(fontSize: 16, color: Colors.black),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Color(0xFFE5D8BE),
+          fillColor: Color(0xFFF0ECB2),
           hintText: '원하시는 책을 검색해보세요',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
@@ -239,7 +239,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
           );
         },
         child: Card(
-          color: Color(0xFF80471C),
+          color: Color(0xFF726953),
           margin: EdgeInsets.symmetric(vertical: 4),
           elevation: 0,
           shape: RoundedRectangleBorder(
