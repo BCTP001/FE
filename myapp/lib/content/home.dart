@@ -61,6 +61,10 @@ class HomeContent extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFFFFFFF),
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+            color: Colors.black,
+            width: 0.4,
+            ),
           ),
           child: Text(
             '전투모의지원중대',
@@ -98,16 +102,18 @@ class HomeContent extends StatelessWidget {
 Widget _buildBookStack(BuildContext context) {
   final screenWidth = MediaQuery.of(context).size.width;
   return Container(
-    width: screenWidth * 0.8,  // 화면 너비의 90% (좌우에 약간 여백)
+    width: screenWidth * 0.85, // 화면 너비의 80%
     decoration: BoxDecoration(
       color: const Color(0xFFF7F2AF),
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(50),
       border: Border.all(
+        // ignore: deprecated_member_use
         color: Colors.black.withOpacity(0.1),
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
+          // ignore: deprecated_member_use
           color: Colors.black.withOpacity(0.1),
           blurRadius: 8,
           offset: Offset(0, 4),
@@ -121,21 +127,13 @@ Widget _buildBookStack(BuildContext context) {
         Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Image.asset(
-              'assets/images/book.png',
-              fit: BoxFit.contain,
-              width: 275,
-              height: 335,
-            ),
-            Positioned(
-              top: 75,
-              child: Text(
-                '오늘의 책을 \n 추천해드립니다',
-                style: GoogleFonts.nanumBrushScript(
-                  fontSize: 50,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Image.asset(
+                'assets/images/RecommendImageButton.png',
+                fit: BoxFit.cover,
+                width: 350,
+                height: 350,
               ),
             ),
           ],
@@ -143,15 +141,17 @@ Widget _buildBookStack(BuildContext context) {
         const SizedBox(height: 25),
         Text(
           '마음이 따뜻해지는 한 권을 만나보세요.',
-          style: GoogleFonts.nanumBrushScript(
-            fontSize: 20,
+          style: GoogleFonts.nanumPenScript(
+            fontSize: 28,
             color: Colors.black87,
           ),
           textAlign: TextAlign.center,
         ),
       ],
     ),
-  );}
+  );
+}
+
 
 
 
@@ -163,6 +163,7 @@ Widget _buildBookStack(BuildContext context) {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 6,
             offset: Offset(0, 3),
@@ -175,8 +176,9 @@ Widget _buildBookStack(BuildContext context) {
         children: [
           Text(
             '유저들이 읽은 책들을\n찾아보세요!',
-            style: GoogleFonts.nanumBrushScript(
-              fontSize: 20,
+            style: GoogleFonts.nanumPenScript(
+              fontSize: 22,
+              // ignore: deprecated_member_use
               color: const Color(0xFF000000).withOpacity(0.8),
             ),
             textAlign: TextAlign.center,
@@ -184,6 +186,7 @@ Widget _buildBookStack(BuildContext context) {
           Icon(
             Icons.keyboard_double_arrow_down,
             size: 32,
+            // ignore: deprecated_member_use
             color: const Color(0xFF000000).withOpacity(0.8),
           ),
         ],

@@ -49,7 +49,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
         client: client,
         child: Scaffold(
           appBar: _buildAppBar(),
-          backgroundColor: Color(0xFF726953),
+          backgroundColor: Color(0xFF938971),
           body: Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
@@ -123,7 +123,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
           );
         },
         child: Card(
-          color: Color(0xFF726953),
+          color: Color(0xFF938971),
           margin: EdgeInsets.symmetric(vertical: 4),
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -182,7 +182,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Color(0xFF726953),
+      backgroundColor: Color(0xFF938971),
       centerTitle: true,
       title: Container(
         width: MediaQuery.of(context).size.width * 0.85,
@@ -193,7 +193,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
         ),
         child: Text(
           '나만의 책장',
-          style: GoogleFonts.nanumBrushScript(
+          style: GoogleFonts.nanumPenScript(
             fontSize: 40,
             color: Colors.black,
           ),

@@ -30,3 +30,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/book.png
+    - assets/images/RecommendImageButton.png
