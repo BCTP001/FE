@@ -23,7 +23,7 @@ class AppDimensions {
 }
 
 class AppStyles {
-  static TextStyle get titleStyle => GoogleFonts.nanumBrushScript(
+  static TextStyle get titleStyle => GoogleFonts.nanumPenScript(
         fontSize: 40,
         color: Colors.black,
       );
