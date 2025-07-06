@@ -97,7 +97,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
   }
 
   Widget _buildBookCard(dynamic book, BuildContext context) {
-    String bookId = book['isbn'];
+    String bookId = book['isbn13'];
 
     return Consumer<BookmarksProvider>(
         builder: (context, bookmarksProvider, child) {
