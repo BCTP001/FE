@@ -4,7 +4,9 @@ import '../component/feedview.dart';
 import 'AIfeed.dart';
 
 class HomeContent extends StatelessWidget {
-  HomeContent({super.key});
+  final VoidCallback onNavigateToRecommendation;
+
+  HomeContent({super.key, required this.onNavigateToRecommendation});
 
   final PageController pageController = PageController(initialPage: 0);
 
@@ -102,15 +104,7 @@ class HomeContent extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                const BookRecommendationContent(), // from aifeed.dart
-          ),
-        );
-      },
+      onTap: onNavigateToRecommendation,
       child: Container(
         width: screenWidth * 0.85, // 화면 너비의 80%
         decoration: BoxDecoration(

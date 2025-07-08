@@ -154,8 +154,8 @@ class _BookmarkContentState extends State<BookmarkContent> {
         child: coverUrl != null
             ? Image.network(
                 coverUrl,
-                width: 100,
-                height: 150,
+                width: 200,
+                height: 280,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(Icons.book, size: 100);

@@ -6,6 +6,7 @@ import 'content/home.dart';
 import 'content/booksearch.dart';
 import 'content/bookmark.dart';
 import 'content/login.dart';
+import 'content/AIfeed.dart';
 
 void main() => runApp(MultiProvider(
       providers: [
@@ -50,7 +51,11 @@ class _MainApp extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-    _child = HomeContent();
+    _child = HomeContent(onNavigateToRecommendation: () {
+      setState(() {
+        _child = BookRecommendationContent(); // replaces only the body
+      });
+    });
   }
 
   @override
@@ -97,7 +102,11 @@ class _MainApp extends State<MainApp> {
     setState(() {
       switch (index) {
         case 0:
-          _child = HomeContent();
+          _child = HomeContent(onNavigateToRecommendation: () {
+            setState(() {
+              _child = BookRecommendationContent(); // replaces only the body
+            });
+          });
           break;
         case 1:
           _child = SearchContent();

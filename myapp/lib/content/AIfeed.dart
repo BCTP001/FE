@@ -42,7 +42,6 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
   void initState() {
     super.initState();
 
-    // 검색창 입력이 바뀔 때마다 setState() 호출해서 버튼 상태 업데이트
     _searchController.addListener(() {
       setState(() {});
     });
@@ -80,21 +79,6 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
             buildKeywordTab(),
             buildBookSearchTab(),
           ],
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: const Color(0xFFFDFCE5),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                Icon(Icons.home, size: 28),
-                Icon(Icons.search, size: 28),
-                Icon(Icons.bookmark, size: 28),
-                Icon(Icons.settings, size: 28),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -147,6 +131,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
                       style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
           ),
+          const SizedBox(height: 80),
         ],
       ),
     );
@@ -188,6 +173,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
                       style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
           ),
+          const SizedBox(height: 80),
         ],
       ),
     );
