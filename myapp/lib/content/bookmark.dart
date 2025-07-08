@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../component/graphql_client.dart';
 import '../content/bookinfo.dart';
+import '../component/bookmarkprovider.dart';
 import 'package:provider/provider.dart';
 
 class BookmarkContent extends StatefulWidget {
@@ -51,12 +52,12 @@ class _BookmarkContentState extends State<BookmarkContent> {
           appBar: _buildAppBar(),
           backgroundColor: Color(0xFF938971),
           body: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(26.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildSortBar(),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 _buildBookGrid(2)
               ],
             ),
@@ -77,12 +78,6 @@ class _BookmarkContentState extends State<BookmarkContent> {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        Text(
-                          '검색결과',
-                          style: GoogleFonts.jua(
-                              fontSize: 24, color: Colors.white),
-                        ),
-                        SizedBox(height: 8),
                         Expanded(
                           // Add this Expanded widget
                           child: ListView.builder(
@@ -129,17 +124,16 @@ class _BookmarkContentState extends State<BookmarkContent> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.zero,
           ),
-          child: Container(
-            height: 180, // Fixed height for the card
+          child: SizedBox(
+            height: 120, // Fixed height for the card
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // Changed to Row for horizontal layout
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: _buildBookCover(book['cover']),
-                ),
+                  .start, // Changed to Row for horizontal layout
+              children:[
+                _buildBookCover(book['cover']),
+                SizedBox(width: 20,),
+                _buildBookInfo(book['title'], book['author'])
               ],
             ),
           ),
@@ -154,14 +148,43 @@ class _BookmarkContentState extends State<BookmarkContent> {
         child: coverUrl != null
             ? Image.network(
                 coverUrl,
-                width: 100,
-                height: 150,
+                width: 80,
+                height: 120,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.book, size: 100);
+                  return const Icon(Icons.book, size: 80);
                 },
               )
-            : const Icon(Icons.book, size: 100));
+            : const Icon(Icons.book, size: 80));
+  }
+
+  Widget _buildBookInfo(String? titleUrl, String? authorUrl){
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          child:Text(
+            titleUrl ?? '', 
+            style: GoogleFonts.jua(
+                fontSize: 14, 
+                color: Colors.white
+              ),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        SizedBox(height: 8,),
+        Text(
+          authorUrl ?? '',
+          style: GoogleFonts.jua(
+            fontSize: 14,
+            color: Colors.white,
+          ),
+        ),        
+      ],
+    );
   }
 
   Future<List<dynamic>> getBooksInShelf() async {
@@ -207,20 +230,18 @@ class _BookmarkContentState extends State<BookmarkContent> {
   Widget _buildSortBar() {
     bool isListView = true; // true for list view, false for grid view
     return StatefulBuilder(builder: (context, setState) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
+      return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Left side: Sort icon and text
             Row(
               children: [
-                Icon(Icons.swap_vert, size: 28, color: Colors.white),
+                Icon(Icons.swap_vert, size: 24, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   '최근',
                   style: GoogleFonts.jua(
-                    fontSize: 24,
+                    fontSize: 20,
                     color: Colors.white,
                   ),
                 ),
@@ -241,48 +262,9 @@ class _BookmarkContentState extends State<BookmarkContent> {
               ),
             ),
           ],
-        ),
-      );
+        );
     });
   }
 }
 
-class BookmarksProvider extends ChangeNotifier {
-  final List<String> _bookmarkedBooks = [];
-  final List<String> _excludedBookmarked = [];
 
-  List<String> get bookmarkedBooks => _bookmarkedBooks;
-
-  Future<void> addBookmark(String bookId) async {
-    _bookmarkedBooks.add(bookId);
-    await _updateShelf();
-    notifyListeners();
-  }
-
-  Future<void> removeBookmark(String bookId) async {
-    _bookmarkedBooks.remove(bookId);
-    _excludedBookmarked.add(bookId);
-    await _updateShelf();
-    notifyListeners();
-  }
-
-  Future<void> _updateShelf() async {
-    try {
-      debugPrint(_bookmarkedBooks.toString());
-      debugPrint(_excludedBookmarked.toString());
-      final shelfResult = await GraphQLService.updateShelf(
-          'default', _bookmarkedBooks, _excludedBookmarked);
-      if (shelfResult != null) {
-        debugPrint('Default shelf updated successfully');
-      } else {
-        debugPrint('Failed to update default shelf');
-      }
-    } catch (e) {
-      debugPrint('Error update default shelf: $e');
-    }
-  }
-
-  bool isBookmarked(String bookId) {
-    return _bookmarkedBooks.contains(bookId);
-  }
-}

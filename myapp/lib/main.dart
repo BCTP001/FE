@@ -6,6 +6,7 @@ import 'content/home.dart';
 import 'content/booksearch.dart';
 import 'content/bookmark.dart';
 import 'content/login.dart';
+import 'component/bookmarkprovider.dart';
 
 void main() => runApp(MultiProvider(
       providers: [

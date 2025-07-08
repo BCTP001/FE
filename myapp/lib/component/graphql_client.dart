@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class GraphQLService {
   static ValueNotifier<GraphQLClient>? _client;
   static const String _baseUrl =
-      "https://humble-zebra-jww5wr76jr53jg4w-4000.app.github.dev/";
+      "https://bug-free-telegram-wgpxq75gwv5c974-4000.app.github.dev/";
   /// Get or initialize GraphQL client
   static ValueNotifier<GraphQLClient> getClient() {
     if (_client == null) {

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../content/bookinfo.dart';
-import '../content/bookmark.dart';
+import 'bookmarkprovider.dart';
 
 class BookSearchContent extends StatefulWidget {
   const BookSearchContent({super.key});
@@ -86,7 +86,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
       appBar: _buildAppBar(),
       backgroundColor: Color(0xFF938971),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(26.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -240,30 +240,26 @@ class _BookSearchContentState extends State<BookSearchContent> {
         },
         child: Card(
           color: Color(0xFF938971),
-          margin: EdgeInsets.symmetric(vertical: 4),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.zero,
           ),
           child: Container(
-            height: 180, // Fixed height for the card
+            height: 120, // Fixed height for the card
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // Changed to Row for horizontal layout
+                  .start, // Changed to Row for horizontal layout
               children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: _buildBookCover(book['cover']),
-                ),
-                SizedBox(width: 8),
+                _buildBookCover(book['cover']),
+                SizedBox(width: 20),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.zero,
                         child: _buildBookInfo(book),
                       ),
                     ],
@@ -301,14 +297,14 @@ class _BookSearchContentState extends State<BookSearchContent> {
         child: coverUrl != null
             ? Image.network(
                 coverUrl,
-                width: 100,
-                height: 150,
+                width: 80,
+                height: 120,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.book, size: 100);
+                  return const Icon(Icons.book, size: 80);
                 },
               )
-            : const Icon(Icons.book, size: 100));
+            : const Icon(Icons.book, size: 80));
   }
 
   Widget _buildBookInfo(dynamic book) {
