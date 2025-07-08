@@ -84,7 +84,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
     return Scaffold(
       appBar: _buildAppBar(),
-      backgroundColor: Color(0xFF80471C),
+      backgroundColor: Color(0xFF938971),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -101,11 +101,11 @@ class _BookSearchContentState extends State<BookSearchContent> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Color(0xFF9AD9B8),
+      backgroundColor: Color(0xFFFFFAE3),
       centerTitle: true,
       title: Text(
         '어떤 책을 찾으시나요?',
-        style: GoogleFonts.nanumBrushScript(
+        style: GoogleFonts.nanumPenScript(
           fontSize: 40,
           color: Colors.black,
         ),
@@ -131,7 +131,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         height: 48,
         margin: EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
-          color: Color(0xFFE5D8BE),
+          color: Color(0xFFF0ECB2),
           borderRadius: BorderRadius.circular(30),
         ),
         padding: EdgeInsets.symmetric(horizontal: 12),
@@ -168,7 +168,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
         style: GoogleFonts.jua(fontSize: 16, color: Colors.black),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Color(0xFFE5D8BE),
+          fillColor: Color(0xFFF0ECB2),
           hintText: '원하시는 책을 검색해보세요',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
@@ -239,7 +239,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
           );
         },
         child: Card(
-          color: Color(0xFF80471C),
+          color: Color(0xFF938971),
           margin: EdgeInsets.symmetric(vertical: 4),
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -325,7 +325,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
           book['categoryName'],
           style: GoogleFonts.jua(
             fontSize: 13,
-            color: Color(0xFF9AD9B8),
+            color: Color(0xFFFFFAE3),
           ),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
