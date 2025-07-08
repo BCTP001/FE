@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../component/feedview.dart';
+import 'AIfeed.dart';
 
 class HomeContent extends StatelessWidget {
   HomeContent({super.key});
@@ -101,7 +102,17 @@ class HomeContent extends StatelessWidget {
 
 Widget _buildBookStack(BuildContext context) {
   final screenWidth = MediaQuery.of(context).size.width;
-  return Container(
+
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const BookRecommendationContent(), // from aifeed.dart
+        ),
+      );
+    },
+     child: Container(
     width: screenWidth * 0.85, // 화면 너비의 80%
     decoration: BoxDecoration(
       color: const Color(0xFFF7F2AF),
@@ -149,6 +160,7 @@ Widget _buildBookStack(BuildContext context) {
         ),
       ],
     ),
+     ),
   );
 }
 

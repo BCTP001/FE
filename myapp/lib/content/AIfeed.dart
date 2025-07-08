@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../component/graphql_client.dart';
 
-void main() => runApp(const MaterialApp(home: BookRecommendationContent()));
-
 class BookRecommendationContent extends StatefulWidget {
   const BookRecommendationContent({super.key});
 
