@@ -264,7 +264,7 @@ class GraphQLService {
     }
   }
 
-  static Future<List<dynamic>> recommendBooks(String keyword, String topN) async {
+  static Future<List<dynamic>> recommendBooks(String keyword, int topN) async {
     final GraphQLClient client = getClient().value;
 
     const String recommendBooksQuery = '''

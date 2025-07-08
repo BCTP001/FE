@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'component/graphql_client.dart';
+import '../component/graphql_client.dart';
 
 void main() => runApp(const MaterialApp(home: BookRecommendationContent()));
 
@@ -183,7 +183,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
     final ValueNotifier<GraphQLClient> client = GraphQLService.getClient();
 
     try {
-      final books = await GraphQLService.recommendBooks(keyword, '5');
+      final books = await GraphQLService.recommendBooks(keyword, 5);
       setState(() {
         recommendedBooks = books;
         isLoading = false;
@@ -223,15 +223,24 @@ class RecommendationResultScreen extends StatelessWidget {
           : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "키워드를 바탕으로\n도서를 찾아보았어요",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Text(
+                        "키워드를 바탕으로\n도서를 찾아보았어요",
+                        style: GoogleFonts.nanumBrushScript(
+                          fontSize: 40,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   Expanded(
                     child: ListView.builder(
                       itemCount: books.length,
-                      itemBuilder: (_, index) {
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      itemBuilder: (context, index) {
                         final book = books[index];
                         return _buildBookCard(context, book);
                       },
@@ -244,27 +253,35 @@ class RecommendationResultScreen extends StatelessWidget {
 
   Widget _buildBookCard(BuildContext context, dynamic book) {
     return Card(
-      color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: Color(0xFFF5F5DC),
+      margin: const EdgeInsets.symmetric(vertical: 50),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            _buildBookCover(book['cover']),
+            _buildBookCover(book['author']),
             const SizedBox(height: 12),
             Text(
               book['title'] ?? '제목 없음',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+              style: GoogleFonts.jua(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
             ),
             const SizedBox(height: 6),
             Text(
-              book['author'] != null && book['category'] != null
-                  ? "${book['author']} - ${book['category']}"
-                  : book['author'] ?? '작자 미상',
-              style: const TextStyle(fontSize: 14),
-              textAlign: TextAlign.center,
+              book['description'],
+              style: GoogleFonts.jua(
+                        fontSize: 16,
+                      ),
+            ),
+            Text(
+              book['cover'],
+              style: GoogleFonts.jua(
+                        fontSize: 16,
+                        color: Color(0xFF037549),
+                      ),
             ),
           ],
         ),
@@ -278,8 +295,8 @@ class RecommendationResultScreen extends StatelessWidget {
       child: coverUrl != null
           ? Image.network(
               coverUrl,
-              width: 150,
-              height: 220,
+              width: 200,
+              height: 280,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return const Icon(Icons.book, size: 100);
