@@ -601,8 +601,8 @@ class SetupScreen3 extends StatelessWidget {
   }
 }
 
-// Setup Screen 4 - Genre Selection
-class SetupScreen4 extends StatelessWidget {
+// Setup Screen 5 - Registration Complete
+class SetupScreen4 extends StatefulWidget {
   final String loginName;
   final String password;
   final String nickname;
@@ -615,112 +615,10 @@ class SetupScreen4 extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primaryGreen,
-      appBar: CommonWidgets.buildAppBar(
-        onBackPressed: () => Navigator.pop(context),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text("계정 생성", style: AppStyles.headerStyle),
-              const SizedBox(height: 20),
-              Text("원하는 장르를 골라주세요", style: AppStyles.subHeaderStyle),
-              const SizedBox(height: 20),
-              Expanded(child: _buildGenreGrid()),
-              const SizedBox(height: 10),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "2/3 페이지 보여주는 중",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppDimensions.mediumSpacing),
-              CommonWidgets.buildNextButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SetupScreen5(
-                      loginName: loginName,
-                      password: password,
-                      nickname: nickname,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGenreGrid() {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: 9,
-      itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.lightYellow,
-            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
-          ),
-          child: index == 8
-              ? const Center(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    child: Icon(Icons.person, color: Colors.white),
-                  ),
-                )
-              : const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "책이름",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "저자",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-        );
-      },
-    );
-  }
+  State<SetupScreen4> createState() => _SetupScreen4State();
 }
 
-// Setup Screen 5 - Registration Complete
-class SetupScreen5 extends StatefulWidget {
-  final String loginName;
-  final String password;
-  final String nickname;
-
-  const SetupScreen5({
-    Key? key,
-    required this.loginName,
-    required this.password,
-    required this.nickname,
-  }) : super(key: key);
-
-  @override
-  State<SetupScreen5> createState() => _SetupScreen5State();
-}
-
-class _SetupScreen5State extends State<SetupScreen5> {
+class _SetupScreen4State extends State<SetupScreen4> {
   bool _isLoading = false;
   bool _isSignupComplete = false;
 

@@ -34,7 +34,6 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       toolbarHeight: 75,
@@ -63,8 +62,8 @@ class HomeContent extends StatelessWidget {
             color: const Color(0xFFFFFFFF),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-            color: Colors.black,
-            width: 0.4,
+              color: Colors.black,
+              width: 0.4,
             ),
           ),
           child: Text(
@@ -82,90 +81,87 @@ class HomeContent extends StatelessWidget {
   }
 
   Widget _buildMainBody(BuildContext context) {
-  return Column(
-    children: [
-      Spacer(flex: 2),
-      Expanded(
-        flex: 5,
-        child: _buildBookStack(context),
-      ),
-      Expanded(
-        flex: 3,
-        child: Center(
-          child: _buildBottomSection(),
-        ),
-      ),
-    ],
-  );
-}
-
-
-Widget _buildBookStack(BuildContext context) {
-  final screenWidth = MediaQuery.of(context).size.width;
-
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const BookRecommendationContent(), // from aifeed.dart
-        ),
-      );
-    },
-     child: Container(
-    width: screenWidth * 0.85, // 화면 너비의 80%
-    decoration: BoxDecoration(
-      color: const Color(0xFFF7F2AF),
-      borderRadius: BorderRadius.circular(50),
-      border: Border.all(
-        // ignore: deprecated_member_use
-        color: Colors.black.withOpacity(0.1),
-        width: 1,
-      ),
-      boxShadow: [
-        BoxShadow(
-          // ignore: deprecated_member_use
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 8,
-          offset: Offset(0, 4),
-        )
-      ],
-    ),
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
+    return Column(
       children: [
-        Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Image.asset(
-                'assets/images/RecommendImageButton.png',
-                fit: BoxFit.cover,
-                width: 350,
-                height: 350,
+        Spacer(flex: 2),
+        Expanded(
+          flex: 5,
+          child: _buildBookStack(context),
+        ),
+        Expanded(
+          flex: 3,
+          child: Center(
+            child: _buildBottomSection(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBookStack(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                const BookRecommendationContent(), // from aifeed.dart
+          ),
+        );
+      },
+      child: Container(
+        width: screenWidth * 0.85, // 화면 너비의 80%
+        decoration: BoxDecoration(
+          color: const Color(0xFFF7F2AF),
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(
+            // ignore: deprecated_member_use
+            color: Colors.black.withOpacity(0.1),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              // ignore: deprecated_member_use
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            )
+          ],
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Image.asset(
+                    'assets/images/RecommendImageButton.png',
+                    fit: BoxFit.cover,
+                    width: 350,
+                    height: 350,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 25),
+            Text(
+              '마음이 따뜻해지는 한 권을 만나보세요.',
+              style: GoogleFonts.nanumPenScript(
+                fontSize: 28,
+                color: Colors.black87,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
-        const SizedBox(height: 25),
-        Text(
-          '마음이 따뜻해지는 한 권을 만나보세요.',
-          style: GoogleFonts.nanumPenScript(
-            fontSize: 28,
-            color: Colors.black87,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-     ),
-  );
-}
-
-
-
+      ),
+    );
+  }
 
   Widget _buildBottomSection() {
     return Container(

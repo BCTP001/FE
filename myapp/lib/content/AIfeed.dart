@@ -15,8 +15,22 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
     with SingleTickerProviderStateMixin {
   String selectedKeyword = '';
   final List<String> keywords = [
-    "로맨스", "힐링", "자기계발", "과학", "주식", "코딩", "판타지",
-    "만화", "정치", "사회", "요리", "문학", "성장", "청소년", "세계", "미군"
+    "로맨스",
+    "힐링",
+    "자기계발",
+    "과학",
+    "주식",
+    "코딩",
+    "판타지",
+    "만화",
+    "정치",
+    "사회",
+    "요리",
+    "문학",
+    "성장",
+    "청소년",
+    "세계",
+    "미군"
   ];
 
   final TextEditingController _searchController = TextEditingController();
@@ -28,7 +42,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
   void initState() {
     super.initState();
 
-  // 검색창 입력이 바뀔 때마다 setState() 호출해서 버튼 상태 업데이트
+    // 검색창 입력이 바뀔 때마다 setState() 호출해서 버튼 상태 업데이트
     _searchController.addListener(() {
       setState(() {});
     });
@@ -119,10 +133,13 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
           const Spacer(),
           Center(
             child: ElevatedButton(
-              onPressed: selectedKeyword.isEmpty ? null : () => fetchRecommendations(selectedKeyword),
+              onPressed: selectedKeyword.isEmpty
+                  ? null
+                  : () => fetchRecommendations(selectedKeyword),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF5D3A00),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
               ),
               child: isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
@@ -141,7 +158,8 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("도서 검색", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          const Text("도서 검색",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
           const SizedBox(height: 12),
           TextField(
             controller: _searchController,
@@ -149,7 +167,8 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
               hintText: "검색어를 입력하세요",
               filled: true,
               fillColor: Colors.white,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             ),
           ),
           const Spacer(),
@@ -160,7 +179,8 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
                   : () => fetchRecommendations(_searchController.text.trim()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF5D3A00),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
               ),
               child: isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
@@ -177,7 +197,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
     setState(() {
       isLoading = true;
     });
-    
+
     final ValueNotifier<GraphQLClient> client = GraphQLService.getClient();
 
     try {
@@ -189,7 +209,9 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => RecommendationResultScreen(books: recommendedBooks)),
+        MaterialPageRoute(
+            builder: (_) =>
+                RecommendationResultScreen(books: recommendedBooks)),
       );
     } catch (e) {
       setState(() {
@@ -219,33 +241,35 @@ class RecommendationResultScreen extends StatelessWidget {
       body: books.isEmpty
           ? const Center(child: Text("추천 결과가 없습니다."))
           : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text(
-                        "키워드를 바탕으로\n도서를 찾아보았어요",
-                        style: GoogleFonts.nanumBrushScript(
-                          fontSize: 40,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "키워드를 바탕으로\n도서를 찾아보았어요",
+                      style: GoogleFonts.nanumBrushScript(
+                        fontSize: 40,
+                        color: Colors.black,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: books.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                      itemBuilder: (context, index) {
-                        final book = books[index];
-                        return _buildBookCard(context, book);
-                      },
+                      textAlign: TextAlign.center,
                     ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: books.length,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    itemBuilder: (context, index) {
+                      final book = books[index];
+                      return _buildBookCard(context, book);
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
     );
   }
 
@@ -263,23 +287,23 @@ class RecommendationResultScreen extends StatelessWidget {
             Text(
               book['title'] ?? '제목 없음',
               style: GoogleFonts.jua(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
               book['description'],
               style: GoogleFonts.jua(
-                        fontSize: 16,
-                      ),
+                fontSize: 16,
+              ),
             ),
             Text(
               book['cover'],
               style: GoogleFonts.jua(
-                        fontSize: 16,
-                        color: Color(0xFF037549),
-                      ),
+                fontSize: 16,
+                color: Color(0xFF037549),
+              ),
             ),
           ],
         ),
@@ -287,7 +311,7 @@ class RecommendationResultScreen extends StatelessWidget {
     );
   }
 
-   Widget _buildBookCover(String? coverUrl) {
+  Widget _buildBookCover(String? coverUrl) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: coverUrl != null
