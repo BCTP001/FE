@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class GraphQLService {
   static ValueNotifier<GraphQLClient>? _client;
   static const String _baseUrl =
-      "https://humble-zebra-jww5wr76jr53jg4w-4000.app.github.dev/";
+      "https://redesigned-carnival-xp6v4wpj9pw2jv-4000.app.github.dev/";
   /// Get or initialize GraphQL client
   static ValueNotifier<GraphQLClient> getClient() {
     if (_client == null) {
@@ -260,6 +260,47 @@ class GraphQLService {
       return [];
     } catch (e) {
       debugPrint('Error in getBooksInShelf: $e');
+      return [];
+    }
+  }
+
+  static Future<List<dynamic>> recommendBooks(String keyword, int topN) async {
+    final GraphQLClient client = getClient().value;
+
+    const String recommendBooksQuery = '''
+      query ExampleQuery(\$request: RecommendBooksRequest) {
+        recommendBooks(request: \$request) {
+          author
+          category
+          cover
+          description
+          title
+        }
+      }
+    ''';
+
+    final QueryOptions options = QueryOptions(
+      document: gql(recommendBooksQuery),
+      variables: {
+        'request': {"keyword": keyword,
+        "top_n": topN}
+      },
+    );
+
+    try {
+      final QueryResult result = await client.query(options);
+      if (result.hasException) {
+        debugPrint('GraphQL Error: ${result.exception.toString()}');
+        return [];
+      }
+
+      if (result.data != null && result.data!['recommendBooks'] != null) {
+        return result.data!['recommendBooks'] as List<dynamic>;
+      }
+
+      return [];
+    } catch (e) {
+      debugPrint('Error in recommendBooks: $e');
       return [];
     }
   }
