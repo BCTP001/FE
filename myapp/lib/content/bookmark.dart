@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import '../component/graphql_client.dart';
-import '../content/bookinfo.dart';
 import 'package:provider/provider.dart';
+
+import '../content/bookinfo.dart';
+import '../component/graphql_client.dart';
+import '../component/util.dart';
 
 class BookmarkContent extends StatefulWidget {
   const BookmarkContent({super.key});
@@ -138,7 +140,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(8),
-                  child: _buildBookCover(book['cover']),
+                  child: buildBookCover(book['cover'], 200, 280),
                 ),
               ],
             ),
@@ -146,22 +148,6 @@ class _BookmarkContentState extends State<BookmarkContent> {
         ),
       );
     });
-  }
-
-  Widget _buildBookCover(String? coverUrl) {
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: coverUrl != null
-            ? Image.network(
-                coverUrl,
-                width: 200,
-                height: 280,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.book, size: 100);
-                },
-              )
-            : const Icon(Icons.book, size: 100));
   }
 
   Future<List<dynamic>> getBooksInShelf() async {

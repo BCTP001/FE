@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../component/graphql_client.dart';
+import '../component/util.dart';
 
 class BookRecommendationContent extends StatefulWidget {
   const BookRecommendationContent({super.key});
@@ -268,7 +269,7 @@ class RecommendationResultScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            _buildBookCover(book['author']),
+            buildBookCover(book['author'], 200, 280),
             const SizedBox(height: 12),
             Text(
               book['title'] ?? '제목 없음',
@@ -294,23 +295,6 @@ class RecommendationResultScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildBookCover(String? coverUrl) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: coverUrl != null
-          ? Image.network(
-              coverUrl,
-              width: 200,
-              height: 280,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.book, size: 100);
-              },
-            )
-          : const Icon(Icons.book, size: 100),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../content/bookinfo.dart';
 import '../content/bookmark.dart';
+import 'util.dart';
 
 class BookSearchContent extends StatefulWidget {
   const BookSearchContent({super.key});
@@ -254,7 +255,7 @@ class _BookSearchContentState extends State<BookSearchContent> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(8),
-                  child: _buildBookCover(book['cover']),
+                  child: buildBookCover(book['cover'], 100, 150),
                 ),
                 SizedBox(width: 8),
                 Expanded(
@@ -293,22 +294,6 @@ class _BookSearchContentState extends State<BookSearchContent> {
         ),
       );
     });
-  }
-
-  Widget _buildBookCover(String? coverUrl) {
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: coverUrl != null
-            ? Image.network(
-                coverUrl,
-                width: 100,
-                height: 150,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.book, size: 100);
-                },
-              )
-            : const Icon(Icons.book, size: 100));
   }
 
   Widget _buildBookInfo(dynamic book) {

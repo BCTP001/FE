@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../component/util.dart';
 
 class BookDetailsScreen extends StatefulWidget {
   final dynamic book;
@@ -62,7 +63,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 책 표지
-              _buildBookCover(widget.book['cover']),
+              buildBookCover(widget.book['cover'], 250, 355),
               const SizedBox(height: 16),
               // 제목
               Row(
@@ -268,27 +269,6 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBookCover(String? coverUrl) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Center(
-          child: coverUrl != null
-              ? Image.network(
-                  coverUrl,
-                  width: 250,
-                  height: 355,
-                  fit: BoxFit.contain,
-                  alignment: Alignment.center,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.book, size: 250);
-                  },
-                )
-              : Icon(Icons.book, size: 250),
-        );
-      },
     );
   }
 
