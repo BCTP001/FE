@@ -226,29 +226,73 @@ class RecommendationResultScreen extends StatelessWidget {
         ),
       ),
       body: books.isEmpty
-          ? const Center(child: Text("추천 결과가 없습니다."))
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.search_off,
+                    size: 60,
+                    color: Colors.white70,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "추천 결과가 없습니다.",
+                    style: GoogleFonts.jua(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "키워드를 바탕으로\n도서를 찾아보았어요",
-                      style: GoogleFonts.nanumBrushScript(
-                        fontSize: 40,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                // Simple header
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                  child: Column(
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          text: "키워드를 바탕으로\n",
+                          style: GoogleFonts.nanumBrushScript(
+                            fontSize: 32,
+                            color: Colors.white, // Base color
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: "5권의 도서", // Specific text part
+                              style: GoogleFonts.nanumBrushScript(
+                                fontSize: 32,
+                                color: AppColors.darkGreen, // Different color for this part
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "를 찾아보았어요", // Remaining text part
+                              style: GoogleFonts.nanumBrushScript(
+                                fontSize: 32,
+                                color: Colors.white, // Back to base color
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
                 Expanded(
                   child: ListView.builder(
                     itemCount: books.length,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 16),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     itemBuilder: (context, index) {
                       final book = books[index];
                       return _buildBookCard(context, book);
@@ -262,34 +306,147 @@ class RecommendationResultScreen extends StatelessWidget {
 
   Widget _buildBookCard(BuildContext context, dynamic book) {
     return Card(
-      color: Color(0xFFF5F5DC),
-      margin: const EdgeInsets.symmetric(vertical: 50),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      color: AppColors.lightCream,
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            buildBookCover(book['author'], 200, 280),
+            // Book cover section
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: buildBookCover(book['author'], 250, 355),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            // Description section
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Colors.grey.shade300,
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.menu_book,
+                        size: 22,
+                        color: AppColors.darkGreen,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "도서 소개",
+                        style: GoogleFonts.jua(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkGreen,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    book['title'] ?? '제목 없음',
+                    style: GoogleFonts.jua(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    book['description'] ?? '설명이 없습니다.',
+                    style: GoogleFonts.jua(
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             const SizedBox(height: 12),
-            Text(
-              book['title'] ?? '제목 없음',
-              style: GoogleFonts.jua(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+
+            // Author/Publisher info
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              decoration: BoxDecoration(
+                color: AppColors.primaryGreen.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 16,
+                    color: AppColors.darkGreen,
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      book['cover'] ?? '정보 없음',
+                      style: GoogleFonts.jua(
+                        fontSize: 13,
+                        color: AppColors.darkGreen,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 6),
-            Text(
-              book['description'],
-              style: GoogleFonts.jua(
-                fontSize: 16,
-              ),
-            ),
-            Text(
-              book['cover'],
-              style: GoogleFonts.jua(
-                fontSize: 16,
-                color: Color(0xFF037549),
+            const SizedBox(height: 16),
+
+            // Simple action button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Action when button is pressed
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryGreen,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 2,
+                ),
+                child: Text(
+                  "자세히 보기",
+                  style: GoogleFonts.jua(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
