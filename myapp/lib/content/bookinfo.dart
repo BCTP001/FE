@@ -48,23 +48,23 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF9AD9B8),
+        backgroundColor: AppColors.primaryGreen,
         leading: IconButton(
           icon: const Icon(Icons.keyboard_arrow_left),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      backgroundColor: Color(0xFF9AD9B8),
+      backgroundColor: AppColors.primaryGreen,
       body: SingleChildScrollView(
         // ScrollView for the entire body
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(AppDimensions.mediumSpacing),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 책 표지
               buildBookCover(widget.book['cover'], 250, 355),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppDimensions.mediumSpacing),
               // 제목
               Row(
                 mainAxisAlignment:
@@ -73,11 +73,10 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                   Expanded(
                     child: Text(
                       widget.book['title'] ?? '',
-                      style: GoogleFonts.jua(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                      style: AppStyles.titleStyle.copyWith(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     ),
                   ),
                   IconButton(
@@ -95,95 +94,77 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppDimensions.smallSpacing),
               // 저자
               Text(
                 widget.book['author'] ?? '',
-                style: GoogleFonts.jua(
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
+                style: AppStyles.bodyStyle
+                    .copyWith(fontSize: 20, color: Colors.black),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppDimensions.smallSpacing),
               Text(
                 '현재 0명의 유저들이 이 책을 읽고 있습니다!',
-                style: GoogleFonts.jua(
-                  fontSize: 15,
-                  color: Color(0xFF037549),
-                ),
+                style: AppStyles.bodyStyle
+                    .copyWith(fontSize: 15, color: AppColors.darkGreen),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppDimensions.smallSpacing + 2),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppDimensions.mediumSpacing),
                 child: buildCategoryTags(widget.book['categoryName']),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppDimensions.mediumSpacing),
               // 도서정보
               _buildInfoBox("도서정보", [
                 Text(
                   "발행일: ${widget.book['pubDate'] ?? ''}",
-                  style: GoogleFonts.jua(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: AppStyles.bodyStyle
+                      .copyWith(fontSize: 16, color: Colors.black),
                 ),
                 Text(
                   "${widget.book['bookinfo']['itemPage'] ?? ''}쪽",
-                  style: GoogleFonts.jua(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: AppStyles.bodyStyle
+                      .copyWith(fontSize: 16, color: Colors.black),
                 ),
                 Text(
                   "ISBN: ${widget.book['isbn'] ?? ''}",
-                  style: GoogleFonts.jua(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: AppStyles.bodyStyle
+                      .copyWith(fontSize: 16, color: Colors.black),
                 ),
               ]),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppDimensions.mediumSpacing),
               // 책소개
               _buildInfoBox("책소개", [
                 if (widget.book['description'] != "")
                   Text(
                     widget.book['description'],
-                    style: GoogleFonts.jua(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
+                    style: AppStyles.bodyStyle
+                        .copyWith(fontSize: 16, color: Colors.black),
                   )
                 else
                   Text(
                     '책소개가 없습니다.',
-                    style: GoogleFonts.jua(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
+                    style: AppStyles.bodyStyle
+                        .copyWith(fontSize: 16, color: Colors.black),
                   )
               ]),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppDimensions.mediumSpacing),
               // 목차
               _buildInfoBox("목차", [
                 // Assuming the 'contents' is a list of chapter names
                 if (widget.book['bookinfo']['toc'] != "")
                   Text(
                     cleanText(widget.book['bookinfo']['toc']),
-                    style: GoogleFonts.jua(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
+                    style: AppStyles.bodyStyle
+                        .copyWith(fontSize: 16, color: Colors.black),
                   )
                 else
                   Text(
                     '책의 목차 정보가 없습니다.',
-                    style: GoogleFonts.jua(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
+                    style: AppStyles.bodyStyle
+                        .copyWith(fontSize: 16, color: Colors.black),
                   )
               ]),
-              const SizedBox(height: 40),
+              const SizedBox(height: AppDimensions.largeSpacing),
             ],
           ),
         ),
@@ -198,7 +179,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
-      color: Color(0xFFF5F5DC),
+      color: AppColors.lightCream,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -286,7 +267,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
       children: categories
           .map((category) => Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFF28DF99),
+                  color: AppColors.lightGreen,
                   borderRadius: BorderRadius.circular(16),
                   // border: Border.all(color: Color(0xFF9AD9B8)),
                 ),

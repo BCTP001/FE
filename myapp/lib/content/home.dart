@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../component/feedview.dart';
-import 'AIfeed.dart';
+import '../component/util.dart';
 
 class HomeContent extends StatelessWidget {
   final VoidCallback onNavigateToRecommendation;
@@ -31,7 +31,7 @@ class HomeContent extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(),
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: AppColors.lightCream,
       body: _buildMainBody(context),
     );
   }
@@ -43,7 +43,7 @@ class HomeContent extends StatelessWidget {
       backgroundColor: Colors.transparent,
       flexibleSpace: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFAE3),
+          color: AppColors.lightYellow,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -52,7 +52,7 @@ class HomeContent extends StatelessWidget {
             ),
           ],
           borderRadius: const BorderRadius.vertical(
-            bottom: Radius.circular(16),
+            bottom: Radius.circular(AppDimensions.borderRadius),
           ),
         ),
       ),
@@ -106,25 +106,23 @@ class HomeContent extends StatelessWidget {
     return GestureDetector(
       onTap: onNavigateToRecommendation,
       child: Container(
-        width: screenWidth * 0.85, // 화면 너비의 80%
+        width: screenWidth * 0.85,
         decoration: BoxDecoration(
-          color: const Color(0xFFF7F2AF),
+          color: AppColors.lightYellow,
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
-            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.1),
               blurRadius: 8,
               offset: Offset(0, 4),
             )
           ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppDimensions.mediumSpacing),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -143,14 +141,12 @@ class HomeContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 25),
-            Text(
-              '마음이 따뜻해지는 한 권을 만나보세요.',
-              style: GoogleFonts.nanumPenScript(
-                fontSize: 28,
-                color: Colors.black87,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            Text('마음이 따뜻해지는 한 권을 만나보세요.',
+                style: AppStyles.titleStyle
+                    .copyWith(fontSize: 28, color: Colors.black87),
+                textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis),
           ],
         ),
       ),
@@ -159,37 +155,35 @@ class HomeContent extends StatelessWidget {
 
   Widget _buildBottomSection() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      padding: const EdgeInsets.symmetric(
+          vertical: AppDimensions.defaultPadding,
+          horizontal: AppDimensions.mediumSpacing),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFAE3),
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.lightYellow,
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 6,
             offset: Offset(0, 3),
           )
         ],
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 32),
+      margin:
+          const EdgeInsets.symmetric(horizontal: AppDimensions.largeSpacing),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             '유저들이 읽은 책들을\n찾아보세요!',
-            style: GoogleFonts.nanumPenScript(
-              fontSize: 22,
-              // ignore: deprecated_member_use
-              color: const Color(0xFF000000).withOpacity(0.8),
-            ),
+            style: AppStyles.titleStyle
+                .copyWith(fontSize: 22, color: Colors.black.withOpacity(0.8)),
             textAlign: TextAlign.center,
           ),
           Icon(
             Icons.keyboard_double_arrow_down,
             size: 32,
-            // ignore: deprecated_member_use
-            color: const Color(0xFF000000).withOpacity(0.8),
+            color: Colors.black.withOpacity(0.8),
           ),
         ],
       ),

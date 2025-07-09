@@ -59,14 +59,14 @@ class _BookmarkContentState extends State<BookmarkContent> {
               children: [
                 _buildSortBar(),
                 SizedBox(height: 20),
-                _buildBookGrid(2)
+                Expanded(child: _buildBookGrid())
               ],
             ),
           ),
         ));
   }
 
-  Widget _buildBookGrid(int columnCount) {
+  Widget _buildBookGrid() {
     return Expanded(
         child: isLoading
             ? Center(child: CircularProgressIndicator())
@@ -79,19 +79,37 @@ class _BookmarkContentState extends State<BookmarkContent> {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        Text(
-                          '검색결과',
+                        Text.rich(TextSpan(
+                          text: '검색결과',
                           style: GoogleFonts.jua(
-                              fontSize: 24, color: Colors.white),
-                        ),
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                          children: [
+                            TextSpan(
+                              text: ' (${books.length})권',
+                              style: GoogleFonts.jua(
+                                  fontSize: 24,
+                                  color: AppColors.darkGreen,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )),
                         SizedBox(height: 8),
                         Expanded(
                           // Add this Expanded widget
-                          child: ListView.builder(
+                          child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200, // Maximum width of each grid item
+                              crossAxisSpacing: 16.0, // Spacing between columns
+                              mainAxisSpacing: 16.0, // Spacing between rows
+                              childAspectRatio: 0.65,
+                            ),
                             itemCount: books.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) =>
-                                _buildBookCard(books[index], context),
+                            itemBuilder: (context, index) {
+                              return _buildBookCard(books[index], context);
+                            },
                             padding: EdgeInsets.zero,
                           ),
                         ),
@@ -126,26 +144,25 @@ class _BookmarkContentState extends State<BookmarkContent> {
         },
         child: Card(
           color: Color(0xFF938971),
-          margin: EdgeInsets.symmetric(vertical: 4),
-          elevation: 0,
+          margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.zero,
           ),
-          child: Container(
-            height: 180, // Fixed height for the card
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+          child:  Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // Changed to Row for horizontal layout
+                  .center, // Changed to Row for horizontal layout
               children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: buildBookCover(book['cover'], 200, 280),
+                Expanded(
+                  flex: 3, // Book cover takes more space
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(10)), // Round top corners
+                    child: buildBookCover(book['cover'], 200, 280),
+                  ),
                 ),
               ],
             ),
           ),
-        ),
       );
     });
   }
@@ -170,11 +187,12 @@ class _BookmarkContentState extends State<BookmarkContent> {
     return AppBar(
       backgroundColor: Color(0xFF938971),
       centerTitle: true,
+      automaticallyImplyLeading: false,
       title: Container(
         width: MediaQuery.of(context).size.width * 0.85,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFFF0ECB2),
+          color: AppColors.lightCream,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
@@ -230,45 +248,5 @@ class _BookmarkContentState extends State<BookmarkContent> {
         ),
       );
     });
-  }
-}
-
-class BookmarksProvider extends ChangeNotifier {
-  final List<String> _bookmarkedBooks = [];
-  final List<String> _excludedBookmarked = [];
-
-  List<String> get bookmarkedBooks => _bookmarkedBooks;
-
-  Future<void> addBookmark(String bookId) async {
-    _bookmarkedBooks.add(bookId);
-    await _updateShelf();
-    notifyListeners();
-  }
-
-  Future<void> removeBookmark(String bookId) async {
-    _bookmarkedBooks.remove(bookId);
-    _excludedBookmarked.add(bookId);
-    await _updateShelf();
-    notifyListeners();
-  }
-
-  Future<void> _updateShelf() async {
-    try {
-      debugPrint(_bookmarkedBooks.toString());
-      debugPrint(_excludedBookmarked.toString());
-      final shelfResult = await GraphQLService.updateShelf(
-          'default', _bookmarkedBooks, _excludedBookmarked);
-      if (shelfResult != null) {
-        debugPrint('Default shelf updated successfully');
-      } else {
-        debugPrint('Failed to update default shelf');
-      }
-    } catch (e) {
-      debugPrint('Error update default shelf: $e');
-    }
-  }
-
-  bool isBookmarked(String bookId) {
-    return _bookmarkedBooks.contains(bookId);
   }
 }

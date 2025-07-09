@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../content/bookinfo.dart';
-import '../content/bookmark.dart';
 import 'util.dart';
 
 class BookSearchContent extends StatefulWidget {

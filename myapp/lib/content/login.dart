@@ -1,211 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../component/graphql_client.dart';
-
-// Constants
-class AppColors {
-  static const Color primaryGreen = Color(0xFFABF4D0);
-  static const Color primaryBrown = Color(0xFF3E2723);
-  static const Color lightBrown = Color(0xFFD0C38F);
-  static const Color lightCream = Color(0xFFF8E6C8);
-  static const Color lightYellow = Color(0xFFFFDBAD);
-}
-
-class AppDimensions {
-  static const double defaultPadding = 24.0;
-  static const double smallSpacing = 8.0;
-  static const double mediumSpacing = 16.0;
-  static const double largeSpacing = 40.0;
-  static const double buttonHeight = 50.0;
-  static const double borderRadius = 8.0;
-  static const double bookLogoWidth = 225.0;
-  static const double bookLogoHeight = 284.0;
-}
-
-class AppStyles {
-  static TextStyle get titleStyle => GoogleFonts.nanumPenScript(
-        fontSize: 40,
-        color: Colors.black,
-      );
-
-  static TextStyle get headerStyle => const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-      );
-
-  static TextStyle get subHeaderStyle => const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      );
-
-  static TextStyle get bodyStyle => const TextStyle(
-        fontSize: 18,
-      );
-
-  static TextStyle get labelStyle => const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-      );
-
-  static TextStyle get captionStyle => const TextStyle(
-        fontSize: 12,
-        color: Colors.black54,
-      );
-}
-
-// Common Widgets
-class CommonWidgets {
-  static Widget buildBookLogo() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset(
-          'assets/images/book.png',
-          fit: BoxFit.contain,
-          width: AppDimensions.bookLogoWidth,
-          height: AppDimensions.bookLogoHeight,
-        ),
-        Positioned(
-          child: Text(
-            '오늘의 책',
-            style: AppStyles.titleStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
-    );
-  }
-
-  static Widget buildInputField({
-    required String label,
-    required TextEditingController controller,
-    String? hintText,
-    bool isPassword = false,
-    bool enabled = true,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: AppStyles.labelStyle),
-        const SizedBox(height: AppDimensions.smallSpacing),
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.lightBrown,
-            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
-          ),
-          child: TextField(
-            controller: controller,
-            obscureText: isPassword,
-            enabled: enabled,
-            decoration: InputDecoration(
-              hintText: hintText,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.mediumSpacing,
-                vertical: 12,
-              ),
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  static Widget buildPrimaryButton({
-    required String text,
-    required VoidCallback? onPressed,
-    Color backgroundColor = AppColors.primaryBrown,
-    Color foregroundColor = Colors.white,
-    bool isLoading = false,
-    double? width,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-        minimumSize: Size(width ?? double.infinity, AppDimensions.buttonHeight),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
-        ),
-      ),
-      child: isLoading
-          ? const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            )
-          : Text(text),
-    );
-  }
-
-  static Widget buildSecondaryButton({
-    required String text,
-    required VoidCallback? onPressed,
-    double? width,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.lightBrown,
-        foregroundColor: Colors.black,
-        minimumSize: Size(width ?? double.infinity, AppDimensions.buttonHeight),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
-        ),
-      ),
-      child: Text(text),
-    );
-  }
-
-  static Widget buildNextButton({
-    required VoidCallback onPressed,
-  }) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.lightCream,
-          foregroundColor: Colors.black,
-          minimumSize: const Size(100, 45),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.borderRadius),
-          ),
-        ),
-        child: const Text("다음"),
-      ),
-    );
-  }
-
-  static AppBar buildAppBar({VoidCallback? onBackPressed}) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: onBackPressed,
-      ),
-    );
-  }
-
-  static void showSnackBar(BuildContext context, String message,
-      {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
-      ),
-    );
-  }
-}
+import '../component/util.dart';
 
 // Welcome Screen
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +18,9 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: AppDimensions.largeSpacing),
               CommonWidgets.buildBookLogo(),
-              const SizedBox(height: 20),
+              const SizedBox(
+                  height:
+                      AppDimensions.mediumSpacing + AppDimensions.smallSpacing),
               Text(
                 "당신만의 책을\n찾아보세요",
                 textAlign: TextAlign.center,
@@ -230,12 +31,14 @@ class WelcomeScreen extends StatelessWidget {
                 text: "로그인",
                 onPressed: () => Navigator.pushNamed(context, '/login'),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppDimensions.smallSpacing + 4),
               CommonWidgets.buildPrimaryButton(
                 text: "회원가입",
                 onPressed: () => Navigator.pushNamed(context, '/setup1'),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(
+                  height:
+                      AppDimensions.mediumSpacing + AppDimensions.smallSpacing),
               Text(
                 "아이디/비밀번호 찾기",
                 style: AppStyles.captionStyle,
@@ -250,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
 
 // Login Screen
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -282,8 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (result?['signIn'] != null) {
         final userData = result!['signIn']['signedInAs'];
 
-        CommonWidgets.showSnackBar(context, '환영합니다, ${userData['name']}님!');
-        Navigator.pushNamed(context, '/main');
+        if (mounted) {
+          CommonWidgets.showSnackBar(context, '환영합니다, ${userData['name']}님!');
+          Navigator.pushNamed(context, '/main');
+        }
       } else {
         if (mounted) {
           CommonWidgets.showSnackBar(
@@ -323,53 +128,48 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryGreen,
-      appBar: CommonWidgets.buildAppBar(
-        onBackPressed: () => Navigator.pop(context),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.defaultPadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: AppDimensions.largeSpacing),
-              CommonWidgets.buildBookLogo(),
-              const SizedBox(height: AppDimensions.largeSpacing),
-              Text(
-                "오늘의 책에\n로그인하기",
-                textAlign: TextAlign.center,
-                style: AppStyles.titleStyle,
-              ),
-              const SizedBox(height: 32),
-              CommonWidgets.buildInputField(
-                label: "아이디",
-                controller: _loginnameController,
-                enabled: !_isLoading,
-              ),
-              const SizedBox(height: AppDimensions.mediumSpacing),
-              CommonWidgets.buildInputField(
-                label: "비밀번호",
-                controller: _passwordController,
-                isPassword: true,
-                enabled: !_isLoading,
-              ),
-              const SizedBox(height: AppDimensions.defaultPadding),
-              CommonWidgets.buildPrimaryButton(
-                text: "로그인",
-                onPressed: _isLoading ? null : _handleSignIn,
-                isLoading: _isLoading,
-              ),
-              const SizedBox(height: AppDimensions.mediumSpacing),
-              Text(
-                "아이디/비밀번호 찾기",
-                style: AppStyles.captionStyle,
-              ),
-            ],
-          ),
+        backgroundColor: AppColors.primaryGreen,
+        appBar: CommonWidgets.buildAppBar(
+          onBackPressed: () => Navigator.pop(context),
         ),
-      ),
-    );
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(AppDimensions.defaultPadding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: AppDimensions.largeSpacing),
+                  CommonWidgets.buildBookLogo(),
+                  const SizedBox(height: AppDimensions.largeSpacing),
+                  CommonWidgets.buildInputField(
+                    label: "아이디",
+                    controller: _loginnameController,
+                    enabled: !_isLoading,
+                  ),
+                  const SizedBox(height: AppDimensions.mediumSpacing),
+                  CommonWidgets.buildInputField(
+                    label: "비밀번호",
+                    controller: _passwordController,
+                    isPassword: true,
+                    enabled: !_isLoading,
+                  ),
+                  const SizedBox(height: AppDimensions.defaultPadding),
+                  CommonWidgets.buildPrimaryButton(
+                    text: "로그인",
+                    onPressed: _isLoading ? null : _handleSignIn,
+                    isLoading: _isLoading,
+                  ),
+                  const SizedBox(height: AppDimensions.mediumSpacing),
+                  Text(
+                    "아이디/비밀번호 찾기",
+                    style: AppStyles.captionStyle,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }
 
@@ -381,12 +181,12 @@ abstract class BaseSetupScreen extends StatelessWidget {
   final bool isPassword;
 
   const BaseSetupScreen({
-    Key? key,
+    super.key,
     required this.title,
     required this.inputLabel,
     required this.inputHint,
     this.isPassword = false,
-  }) : super(key: key);
+  });
 
   Widget buildBody(BuildContext context, TextEditingController controller);
 
@@ -466,7 +266,7 @@ class SetupScreen1 extends BaseSetupScreen {
 class SetupScreen2 extends StatelessWidget {
   final String loginName;
 
-  const SetupScreen2({Key? key, required this.loginName}) : super(key: key);
+  const SetupScreen2({super.key, required this.loginName});
 
   @override
   Widget build(BuildContext context) {
@@ -535,10 +335,10 @@ class SetupScreen3 extends StatelessWidget {
   final String password;
 
   const SetupScreen3({
-    Key? key,
+    super.key,
     required this.loginName,
     required this.password,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -608,11 +408,11 @@ class SetupScreen4 extends StatefulWidget {
   final String nickname;
 
   const SetupScreen4({
-    Key? key,
+    super.key,
     required this.loginName,
     required this.password,
     required this.nickname,
-  }) : super(key: key);
+  });
 
   @override
   State<SetupScreen4> createState() => _SetupScreen4State();
@@ -641,9 +441,9 @@ class _SetupScreen4State extends State<SetupScreen4> {
       if (result?['signUp'] != null) {
         final userData = result!['signUp'];
         final userId = userData['id'];
-        if (mounted) {
-          await GraphQLService.createShelf('default', userId);
+        await GraphQLService.createShelf('default', userId);
 
+        if (mounted) {
           setState(() => _isSignupComplete = true);
           CommonWidgets.showSnackBar(
             context,

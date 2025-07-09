@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import '../component/graphql_client.dart';
 import '../component/util.dart';
 
@@ -53,9 +52,9 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFFB7FFE3),
+        backgroundColor: AppColors.primaryGreen,
         appBar: AppBar(
-          backgroundColor: const Color(0xFFB7FFE3),
+          backgroundColor: AppColors.primaryGreen,
           elevation: 0,
           centerTitle: true,
           title: Text(
@@ -107,7 +106,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
                     selectedKeyword = isSelected ? '' : keyword;
                   });
                 },
-                selectedColor: const Color(0xFF5D3A00),
+                selectedColor: AppColors.primaryBrown,
                 backgroundColor: Colors.white,
                 labelStyle: TextStyle(
                   color: isSelected ? Colors.white : Colors.black,
@@ -122,7 +121,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
                   ? null
                   : () => fetchRecommendations(selectedKeyword),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF5D3A00),
+                backgroundColor: AppColors.primaryBrown,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
               ),
@@ -164,7 +163,7 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
                   ? null
                   : () => fetchRecommendations(_searchController.text.trim()),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF5D3A00),
+                backgroundColor: AppColors.primaryBrown,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
               ),
@@ -184,8 +183,6 @@ class _BookRecommendationContentState extends State<BookRecommendationContent>
     setState(() {
       isLoading = true;
     });
-
-    final ValueNotifier<GraphQLClient> client = GraphQLService.getClient();
 
     try {
       final books = await GraphQLService.recommendBooks(keyword, 5);
@@ -216,14 +213,9 @@ class RecommendationResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF9AD9B8),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF9AD9B8),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: CommonWidgets.buildAppBar(
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: books.isEmpty
           ? Center(
@@ -269,7 +261,8 @@ class RecommendationResultScreen extends StatelessWidget {
                               text: "5권의 도서", // Specific text part
                               style: GoogleFonts.nanumBrushScript(
                                 fontSize: 32,
-                                color: AppColors.darkGreen, // Different color for this part
+                                color: AppColors
+                                    .darkGreen, // Different color for this part
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

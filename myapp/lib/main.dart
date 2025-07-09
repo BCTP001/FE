@@ -6,7 +6,8 @@ import 'content/home.dart';
 import 'content/booksearch.dart';
 import 'content/bookmark.dart';
 import 'content/login.dart';
-import 'content/AIfeed.dart';
+import 'content/aifeed.dart';
+import '../component/util.dart';
 
 void main() => runApp(MultiProvider(
       providers: [
@@ -16,13 +17,15 @@ void main() => runApp(MultiProvider(
     ));
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Book App',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        scaffoldBackgroundColor: Color(0xFFABF4D0),
+        scaffoldBackgroundColor: AppColors.primaryGreen,
       ),
       home: WelcomeScreen(),
       routes: {
@@ -68,19 +71,19 @@ class _MainApp extends State<MainApp> {
         icons: [
           FluidNavBarIcon(
               icon: Icons.home,
-              backgroundColor: Color(0xFFD0C38F),
+              backgroundColor: AppColors.lightBrown,
               extras: {"label": "home"}),
           FluidNavBarIcon(
               icon: Icons.search,
-              backgroundColor: Color(0xFFD0C38F),
+              backgroundColor: AppColors.lightBrown,
               extras: {"label": "search"}),
           FluidNavBarIcon(
               icon: Icons.collections_bookmark,
-              backgroundColor: Color(0xFFD0C38F),
+              backgroundColor: AppColors.lightBrown,
               extras: {"label": "bookmark"}),
           FluidNavBarIcon(
               icon: Icons.settings,
-              backgroundColor: Color(0xFFD0C38F),
+              backgroundColor: AppColors.lightBrown,
               extras: {"label": "settings"}),
         ],
         onChange: _handleNavigationChange,
