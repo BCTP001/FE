@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../component/graphql_client.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -222,10 +223,20 @@ Widget buildBookCover(String? coverUrl, double x, double y) {
             height: y,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
-              return const Icon(Icons.book, size: 100);
+              return SizedBox(
+                width: x,
+                height: y,
+                child: const Icon(Icons.book,
+                    size: 100), // Consider adjusting icon size if it's too big
+              );
             },
           )
-        : const Icon(Icons.book, size: 100),
+        : SizedBox(
+            width: x,
+            height: y,
+            child: const Icon(Icons.book,
+                size: 100), // Consider adjusting icon size if it's too big
+          ),
   );
 }
 
@@ -237,13 +248,18 @@ class BookmarksProvider extends ChangeNotifier {
 
   Future<void> addBookmark(String bookId) async {
     _bookmarkedBooks.add(bookId);
+    // if (_excludedBookmarked.contains(bookId)) {
+    //   _excludedBookmarked.remove(bookId);
+    // }
     await _updateShelf();
     notifyListeners();
   }
 
   Future<void> removeBookmark(String bookId) async {
     _bookmarkedBooks.remove(bookId);
-    _excludedBookmarked.add(bookId);
+    // if (!_excludedBookmarked.contains(bookId)) {
+    //   _excludedBookmarked.add(bookId);
+    // }
     await _updateShelf();
     notifyListeners();
   }

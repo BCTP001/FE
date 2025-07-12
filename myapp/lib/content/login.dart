@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (mounted) {
           CommonWidgets.showSnackBar(context, '환영합니다, ${userData['name']}님!');
-          Navigator.pushNamed(context, '/main');
+          Navigator.pushReplacementNamed(context, '/main');
         }
       } else {
         if (mounted) {

@@ -59,7 +59,8 @@ class _BookmarkContentState extends State<BookmarkContent> {
               children: [
                 _buildSortBar(),
                 SizedBox(height: 20),
-                Expanded(child: _buildBookGrid())
+                Expanded(child: _buildBookGrid()),
+                SizedBox(height: 40),
               ],
             ),
           ),
@@ -101,7 +102,8 @@ class _BookmarkContentState extends State<BookmarkContent> {
                           child: GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 200, // Maximum width of each grid item
+                              maxCrossAxisExtent:
+                                  200, // Maximum width of each grid item
                               crossAxisSpacing: 16.0, // Spacing between columns
                               mainAxisSpacing: 16.0, // Spacing between rows
                               childAspectRatio: 0.65,
@@ -121,7 +123,7 @@ class _BookmarkContentState extends State<BookmarkContent> {
 
     return Consumer<BookmarksProvider>(
         builder: (context, bookmarksProvider, child) {
-      bool isBookmarked = bookmarksProvider.isBookmarked(bookId);
+      bool isBookmarked = true;
 
       return GestureDetector(
         onTap: () {
@@ -148,21 +150,18 @@ class _BookmarkContentState extends State<BookmarkContent> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.zero,
           ),
-          child:  Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment
-                  .center, // Changed to Row for horizontal layout
-              children: [
-                Expanded(
-                  flex: 3, // Book cover takes more space
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(10)), // Round top corners
-                    child: buildBookCover(book['cover'], 200, 280),
-                  ),
-                ),
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment
+                .center, // Changed to Row for horizontal layout
+            children: [
+              Expanded(
+                flex: 3, // Book cover takes more space
+                child: buildBookCover(book['cover'], 200, 280),
+              ),
+            ],
           ),
+        ),
       );
     });
   }

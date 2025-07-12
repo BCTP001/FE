@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../component/feedview.dart';
 import '../component/util.dart';
+import '../content/aifeed.dart';
 
 class HomeContent extends StatelessWidget {
-  final VoidCallback onNavigateToRecommendation;
-
-  HomeContent({super.key, required this.onNavigateToRecommendation});
+  HomeContent({super.key});
 
   final PageController pageController = PageController(initialPage: 0);
 
@@ -104,7 +103,12 @@ class HomeContent extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: onNavigateToRecommendation,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BookRecommendationContent()),
+        );
+      },
       child: Container(
         width: screenWidth * 0.85,
         decoration: BoxDecoration(
@@ -134,8 +138,8 @@ class HomeContent extends StatelessWidget {
                   child: Image.asset(
                     'assets/images/RecommendImageButton.png',
                     fit: BoxFit.cover,
-                    width: 350,
-                    height: 350,
+                    width: 320,
+                    height: 320,
                   ),
                 ),
               ],
